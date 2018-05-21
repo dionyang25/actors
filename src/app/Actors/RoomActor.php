@@ -32,19 +32,25 @@ class RoomActor extends Actor{
             if(count($join_users)>=self::ROOM_USERS){
                 return false;
             }
-            $current_user_actor = $this->name . $user_id;
+            $current_user_actor = 'Player'.$user_id;
             try{
                 Actor::create(PlayerActor::class,$current_user_actor);
+//                $user_info['room_id'] = $this->name;
                 Actor::getRpc($current_user_actor)->initData($user_info);
             }catch (\Exception $e){
                 return false;
             }
+
         }else{
             //重进房间逻辑
         }
         //订阅房间消息
         get_instance()->addSub('Room/'.$this->name,$user_id);
-        get_instance()->pub('Room/'.$this->name,$user_id.'进入房间');
+        $data = [
+            'type'=>1002,
+            'msg'=>'系统消息：欢迎'.$user_id.'进入房间'
+        ];
+        get_instance()->pub('Room/'.$this->name,$data);
         return true;
     }
 

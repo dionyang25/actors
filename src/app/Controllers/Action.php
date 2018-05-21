@@ -17,7 +17,14 @@ class Action extends Controller
     protected function initialization($controller_name, $method_name)
     {
         parent::initialization($controller_name, $method_name);
+        //基本Actor
+        try {
+            //创建房间
+            Actor::create(RoomListActor::class, 'roomList');
+            Actor::getRpc('roomList')->initData();
+        }catch (\Exception $e){
 
+        }
     }
 
     public function connect()
@@ -32,35 +39,36 @@ class Action extends Controller
      */
     public function enterRoom()
     {
-            if(!Actor::has('roomList')){
-               var_dump( Actor::create(RoomListActor::class,'roomList'));
+
+        try{
+            //判断是否已在房间
+            $RoomActorName = Actor::getRpc('roomList')->hasRoom($this->uid);
+            if($RoomActorName){
+                $this->send(['type' => '103', 'msg' => '您已经在房间'.$RoomActorName.'里了']);
+                return ;
             }
-            return ;
             //列表获取可用房间
-            $RoomActorName = Actor::getRpc('roomList')->findAvailableRoom();
-            $user_info['id'] = $this->uid;
-            if(Actor::getRpc($RoomActorName)->joinRoomReply($user_info)){
-                $this->send(['type' => '101', 'msg' => '已进入房间！房间号-'.$RoomActorName,'params'=>['room_no'=>$RoomActorName]]);
+            $RoomActorName = Actor::getRpc('roomList')->findAvailableRoom(1,$this->uid);
+            if(!empty($RoomActorName)){
+                $this->send(['type' => '1001', 'msg' => '进入房间！房间号-'.$RoomActorName,'params'=>['room_no'=>$RoomActorName]]);
             }else{
                 $this->send(['type' => '102', 'msg' => '进入房间失败！']);
             }
+
+        }catch (\Exception $e){
+            echo $e->getMessage();
+        }
+
     }
 
-    public function update()
-    {
-        $this->sendToAll(
-            [
-                'type' => 'update',
-                'id' => $this->uid,
-                'angle' => $this->client_data->angle + 0,
-                'momentum' => $this->client_data->momentum + 0,
-                'x' => $this->client_data->x + 0,
-                'y' => $this->client_data->y + 0,
-                'life' => 1,
-                'name' => isset($this->client_data->name) ? $this->client_data->name : 'Guest.' . $this->uid,
-                'authorized' => false,
-            ]);
-    }
+      public function roomList(){
+          try {
+              $list = Actor::getRpc('roomList')->info();
+              $this->send(['type' => '1003', 'msg' => '房间列表：','params'=>['room_list'=>$list]]);
+          }catch (\Exception $e){
+              echo $e->getMessage();
+          }
+      }
 
     public function message()
     {

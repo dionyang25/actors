@@ -22,4 +22,8 @@ class PlayerActor extends Actor{
     {
         return false;
     }
+
+    public function info(){
+        return $this->saveContext->getData()['info'];
+    }
 }

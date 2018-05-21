@@ -14,6 +14,7 @@
 
 <body>
 <button id="enterRoom">进入房间</button>
+<button id="roomList">房间列表</button>
 <div id="chatFrame">
 
 </div>
@@ -30,7 +31,23 @@
     ws.onmessage = function(evt) {
         console.log(evt);
         let evtData = JSON.parse(evt.data);
+        if(evtData.type=='1002'){
+            evtData.msg = '<div style="color:#238E23">'+evtData.msg+'</div>';
+        }
         fMsg(evtData.msg);
+        //逻辑处理。。
+        //1001 进入房间
+        if(evtData.type=='1001'){
+            //已进入房间
+            $("#enterRoom").html("开始游戏");
+        }
+        //1003 房间列表
+        if(evtData.type=='1003'){
+            //已进入房间
+            fMsg(JSON.stringify(evtData.params.room_list));
+        }
+
+
     };
 
     ws.onclose = function(evt) {
@@ -43,6 +60,10 @@
 
     $("#enterRoom").click(function () {
        ws.send(JSON.stringify({'type':'enterRoom'}));
+    });
+
+    $("#roomList").click(function () {
+        ws.send(JSON.stringify({'type':'roomList'}));
     });
 </script>
 </body>
