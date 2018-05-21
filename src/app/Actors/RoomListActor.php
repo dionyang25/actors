@@ -10,8 +10,13 @@ class RoomListActor extends Actor{
         $this->saveContext['user_room'] = [];
     }
 
-    public function info(){
-        return $this->saveContext->getData()['room_list'];//只有房间名和人数
+    public function info($roomActorName = ''){
+        if(empty($roomActorName)){
+            return $this->saveContext->getData()['room_list'];//只有房间名和人数
+        }else{
+            return $this->saveContext->getData()['room_list'][$roomActorName];
+        }
+
     }
 
     public function createRoom($enter = 0,$user_id = ''){
@@ -67,6 +72,13 @@ class RoomListActor extends Actor{
             $this->saveContext->getData()['room_list'][$RoomActorName]++;
         }
         $this->saveContext->getData()['user_room'][$user_id] = $RoomActorName;
+        $this->saveContext->save();
+    }
+
+    public function removeRoomUser($user_id){
+        $RoomActorName = $this->saveContext->getData()['user_room'][$user_id];
+        $this->saveContext->getData()['room_list'][$RoomActorName]--;
+        unset($this->saveContext->getData()['user_room'][$user_id]);
         $this->saveContext->save();
     }
 

@@ -61,6 +61,22 @@ class Action extends Controller
 
     }
 
+    public function exitRoom(){
+        try {
+            //判断是否已在房间
+            $RoomActorName = Actor::getRpc('roomList')->hasRoom($this->uid);
+            if (!$RoomActorName) {
+                $this->send(['type' => '104', 'msg' => '您不在房间内']);
+                return;
+            }
+            //交给RoomActor退房
+            Actor::getRpc($RoomActorName)->exitRoom($this->uid);
+            $this->send(['type' => '1004', 'msg' => '您已退出房间']);
+        }catch (\Exception $e){
+            echo $e->getMessage();
+        }
+    }
+
       public function roomList(){
           try {
               $list = Actor::getRpc('roomList')->info();
@@ -81,13 +97,59 @@ class Action extends Controller
         );
     }
 
+
+
+    /**
+     * 开始游戏
+     */
+    public function startGame(){
+        try{
+            //找roomActor
+            $RoomActorName = Actor::getRpc('roomList')->hasRoom($this->uid);
+            if (!$RoomActorName) {
+                $this->send(['type' => '104', 'msg' => '您不在房间内']);
+                return;
+            }
+            //是否人满
+            $num = Actor::getRpc('roomList')->info($RoomActorName);
+            if($num==2){
+                //游戏流程
+                $this->send(['type' => '1005', 'msg' => '游戏开始']);
+                $this->gameProcess();
+            }else{
+                $this->send(['type' => '105', 'msg' => '房间人数不足，无法开始游戏。']);
+            }
+
+            //成功则进入流程
+        }catch (\Exception $e){
+
+        }
+
+    }
+
+    /**
+     * 游戏流程
+     */
+    public function gameProcess(){
+
+    }
+
     public function onClose()
     {
+        //删除用户对应的所有信息
+        try{
+            Actor::destroyActor('Player'.$this->uid);
+            //在房间则退房
+            $this->exitRoom();
+        }catch (\Exception $e){
+            echo $e->getMessage();
+        }
+
         $this->destroy();
     }
 
-    public function onConnect()
-    {
-        $this->destroy();
-    }
+//    public function onConnect()
+//    {
+//        $this->destroy();
+//    }
 }

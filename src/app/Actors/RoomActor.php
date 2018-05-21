@@ -35,15 +35,17 @@ class RoomActor extends Actor{
             $current_user_actor = 'Player'.$user_id;
             try{
                 Actor::create(PlayerActor::class,$current_user_actor);
-//                $user_info['room_id'] = $this->name;
                 Actor::getRpc($current_user_actor)->initData($user_info);
             }catch (\Exception $e){
-                return false;
+
             }
 
         }else{
             //重进房间逻辑
         }
+        //添加用户
+        $this->saveContext->getData()['user_list'][$user_id] = 1;
+        $this->saveContext->save();
         //订阅房间消息
         get_instance()->addSub('Room/'.$this->name,$user_id);
         $data = [
@@ -52,6 +54,22 @@ class RoomActor extends Actor{
         ];
         get_instance()->pub('Room/'.$this->name,$data);
         return true;
+    }
+
+    /**
+     * 退出房间
+     * @throws
+     */
+    public function exitRoom($user_id){
+        $data = [
+            'type'=>1002,
+            'msg'=>'系统消息：'.$user_id.'已退出房间'
+        ];
+        get_instance()->pub('Room/'.$this->name,$data);
+        get_instance()->removeSub('Room/'.$this->name,$user_id);
+        unset($this->saveContext->getData()['user_list'][$user_id]);
+        $this->saveContext->save();
+        Actor::getRpc('roomList')->removeRoomUser($user_id);
     }
 
     function registStatusHandle($key, $value)

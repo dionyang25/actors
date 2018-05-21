@@ -15,6 +15,8 @@
 <body>
 <button id="enterRoom">进入房间</button>
 <button id="roomList">房间列表</button>
+<button id="exitRoom">退出房间</button>
+<button id="startGame" style="display: none">开始游戏</button>
 <div id="chatFrame">
 
 </div>
@@ -39,14 +41,15 @@
         //1001 进入房间
         if(evtData.type=='1001'){
             //已进入房间
-            $("#enterRoom").html("开始游戏");
-        }
+            $("#startGame").show();
+        }else if(evtData.type=='1003'){
         //1003 房间列表
-        if(evtData.type=='1003'){
             //已进入房间
             fMsg(JSON.stringify(evtData.params.room_list));
+        }else if(evtData.type=='1004'){
+        //1004 退出房间
+            $("#startGame").hide();
         }
-
 
     };
 
@@ -64,6 +67,10 @@
 
     $("#roomList").click(function () {
         ws.send(JSON.stringify({'type':'roomList'}));
+    });
+
+    $("#exitRoom").click(function () {
+        ws.send(JSON.stringify({'type':'exitRoom'}));
     });
 </script>
 </body>
