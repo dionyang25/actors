@@ -20,6 +20,7 @@ class RoomActor extends Actor{
     }
 
 
+
     /**
      * 进房询问
      * @param $user_info

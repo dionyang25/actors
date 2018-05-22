@@ -2,6 +2,7 @@
 
 namespace app\Controllers;
 
+use app\Actors\CardListActor;
 use app\Actors\RoomListActor;
 use Server\CoreBase\Actor;
 use Server\CoreBase\Controller;
@@ -115,12 +116,13 @@ class Action extends Controller
             if($num==2){
                 //游戏流程
                 $this->send(['type' => '1005', 'msg' => '游戏开始']);
-                $this->gameProcess();
+                //成功则进入流程
+                $this->initGame();
             }else{
                 $this->send(['type' => '105', 'msg' => '房间人数不足，无法开始游戏。']);
             }
 
-            //成功则进入流程
+
         }catch (\Exception $e){
 
         }
@@ -128,9 +130,20 @@ class Action extends Controller
     }
 
     /**
-     * 游戏流程
+     * 游戏流程-初始化游戏
      */
-    public function gameProcess(){
+    public function initGame(){
+        $card_list_name = 'cardList-'.$this->uid;
+        $param['uid'] = $this->uid;
+        //生成初始游戏数据
+        Actor::getRpc('Player'.$this->uid)->addGameInfo(1);
+        //生成卡组
+        try{
+            Actor::create(CardListActor::class,$card_list_name);
+//            Actor::getRpc($card_list_name)
+        }catch (\Exception $e){
+
+        }
 
     }
 
