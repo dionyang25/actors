@@ -40,7 +40,7 @@ class PlayerActor extends Actor{
         $this->saveContext->save();
         //发布游戏信息信息
 
-        get_instance()->pub('Room/'.$this->name,$data);
+//        get_instance()->pub('Room/'.$this->name,$data);
         return $game_info;
     }
 }

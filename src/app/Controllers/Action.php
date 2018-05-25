@@ -140,11 +140,14 @@ class Action extends Controller
         //生成卡组
         try{
             Actor::create(CardListActor::class,$card_list_name);
-//            Actor::getRpc($card_list_name)
         }catch (\Exception $e){
 
         }
-
+        //添加5张卡至手卡
+        Actor::getRpc($card_list_name)->addNewCard(5);
+        $card_list = Actor::getRpc($card_list_name)->fetchList();
+        //返回卡牌的信息
+        $this->send(['type' => '201', 'msg' => '卡牌信息','params'=>['card_list'=>$card_list]]);
     }
 
     public function onClose()
