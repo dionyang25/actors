@@ -37,3 +37,4 @@ $config['cards'] = [
         'is_object'=>1
     ]
 ];
+return $config;

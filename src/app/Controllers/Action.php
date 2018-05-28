@@ -111,43 +111,14 @@ class Action extends Controller
                 $this->send(['type' => '104', 'msg' => '您不在房间内']);
                 return;
             }
-            //是否人满
-            $num = Actor::getRpc('roomList')->info($RoomActorName);
-            if($num==2){
-                //游戏流程
-                $this->send(['type' => '1005', 'msg' => '游戏开始']);
-                //成功则进入流程
-                $this->initGame();
-            }else{
-                $this->send(['type' => '105', 'msg' => '房间人数不足，无法开始游戏。']);
-            }
+            //开始游戏
+            Actor::getRpc($RoomActorName)->startGame();
 
 
         }catch (\Exception $e){
 
         }
 
-    }
-
-    /**
-     * 游戏流程-初始化游戏
-     */
-    public function initGame(){
-        $card_list_name = 'cardList-'.$this->uid;
-        $param['uid'] = $this->uid;
-        //生成初始游戏数据
-        Actor::getRpc('Player'.$this->uid)->addGameInfo(1);
-        //生成卡组
-        try{
-            Actor::create(CardListActor::class,$card_list_name);
-        }catch (\Exception $e){
-
-        }
-        //添加5张卡至手卡
-        Actor::getRpc($card_list_name)->addNewCard(5);
-        $card_list = Actor::getRpc($card_list_name)->fetchList();
-        //返回卡牌的信息
-        $this->send(['type' => '201', 'msg' => '卡牌信息','params'=>['card_list'=>$card_list]]);
     }
 
     public function onClose()

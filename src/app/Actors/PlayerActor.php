@@ -18,6 +18,7 @@ class PlayerActor extends Actor{
     public function initData($user_info){
         $this->saveContext['user_info'] = $user_info;
         //订阅用户消息
+        var_dump($user_info['id']);
         get_instance()->addSub('Player/'.$this->name,$user_info['id']);
     }
 
@@ -33,7 +34,8 @@ class PlayerActor extends Actor{
     public function addGameInfo($init = 0,$game_info=[]){
         if($init){
             $game_info = [
-                'hp'=>15
+                'hp'=>15,
+                'card_num'=>5
             ];
         }
         $this->saveContext->getData()['game_info'] = $game_info;

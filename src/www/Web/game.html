@@ -33,22 +33,34 @@
     ws.onmessage = function(evt) {
         console.log(evt);
         let evtData = JSON.parse(evt.data);
-        if(evtData.type=='1002'){
-            evtData.msg = '<div style="color:#238E23">'+evtData.msg+'</div>';
-        }
-        fMsg(evtData.msg);
         //逻辑处理。。
         //1001 进入房间
-        if(evtData.type=='1001'){
-            //已进入房间
-            $("#startGame").show();
-        }else if(evtData.type=='1003'){
-        //1003 房间列表
-            //已进入房间
-            fMsg(JSON.stringify(evtData.params.room_list));
-        }else if(evtData.type=='1004'){
-        //1004 退出房间
-            $("#startGame").hide();
+        console.log('evtData',evtData);
+        switch (evtData.type){
+            case '1001':
+                fMsg(evtData.msg);
+                //已进入房间
+                $("#startGame").show();
+                break;
+            case '1004':
+                //1004 退出房间
+                fMsg(evtData.msg);
+                $("#startGame").hide();
+                break;
+            case '1002':
+                evtData.msg = '<div style="color:#66FFCC">'+evtData.msg+'</div>';
+                fMsg(evtData.msg);
+                break;
+            case '1003':
+            case '2001':
+            case '2002':
+                evtData.msg = '<div style="color:#238E23">'+evtData.msg+'</div>';
+                fMsg(evtData.msg);
+                console.log('evtData.params',evtData.params);
+                fMsg('<div style="color:#238E23">'+JSON.stringify(evtData.params)+'</div>');
+            break;
+            default:
+                fMsg(evtData.msg);
         }
 
     };
@@ -71,6 +83,9 @@
 
     $("#exitRoom").click(function () {
         ws.send(JSON.stringify({'type':'exitRoom'}));
+    });
+    $("#startGame").click(function () {
+        ws.send(JSON.stringify({'type':'startGame'}));
     });
 </script>
 </body>

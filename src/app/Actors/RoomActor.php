@@ -28,7 +28,11 @@ class RoomActor extends Actor{
      */
     public function joinRoomReply($user_info){
         $user_id = $user_info['id'];
-        $join_users = $this->saveContext['user_list'];
+        if(empty($this->saveContext->getData()['user_list'])){
+            $this->saveContext->getData()['user_list'] = [];
+            $this->saveContext->save();
+        }
+        $join_users = $this->saveContext->getData()['user_list'];
         if(!isset($join_users[$user_id])){
             if(count($join_users)>=self::ROOM_USERS){
                 return false;
@@ -50,7 +54,7 @@ class RoomActor extends Actor{
         //订阅房间消息
         get_instance()->addSub('Room/'.$this->name,$user_id);
         $data = [
-            'type'=>1002,
+            'type'=>'1002',
             'msg'=>'系统消息：欢迎'.$user_id.'进入房间'
         ];
         get_instance()->pub('Room/'.$this->name,$data);
@@ -63,7 +67,7 @@ class RoomActor extends Actor{
      */
     public function exitRoom($user_id){
         $data = [
-            'type'=>1002,
+            'type'=>'1002',
             'msg'=>'系统消息：'.$user_id.'已退出房间'
         ];
         get_instance()->pub('Room/'.$this->name,$data);
@@ -71,6 +75,77 @@ class RoomActor extends Actor{
         unset($this->saveContext->getData()['user_list'][$user_id]);
         $this->saveContext->save();
         Actor::getRpc('roomList')->removeRoomUser($user_id);
+    }
+
+    /**
+     * 开始游戏
+     * @throws \Server\Asyn\MQTT\Exception
+     */
+    public function startGame(){
+        $num = count($this->saveContext->getData()['user_list']);
+        if($num==2){
+            $data = [
+                'type'=>'1005',
+                'msg'=>'游戏开始'
+            ];
+            get_instance()->pub('Room/'.$this->name,$data);
+            $this->initGame();
+            return true;
+        }else{
+            $data = [
+                'type'=>105,
+                'msg'=>'房间人数不足，无法开始游戏。'
+            ];
+            get_instance()->pub('Room/'.$this->name,$data);
+            return false;
+        }
+    }
+
+    /**
+     * 初始化游戏
+     * @throws \Server\Asyn\MQTT\Exception
+     */
+    public function initGame(){
+        $user_info = [];
+        $card_list = [];
+        //为两边生成游戏数据
+        foreach ($this->saveContext->getData()['user_list'] as $uid=>$val){
+            //生成初始游戏数据
+            try{
+                Actor::create(PlayerActor::class,'Player-'.$uid);
+                Actor::getRpc('Player-'.$uid)->initData(['id'=>$uid]);
+            }catch (\Exception $e){
+
+            }
+            $user_info[$uid] = Actor::getRpc('Player-'.$uid)->addGameInfo(1);
+            //生成卡组
+            $card_list_name = 'cardList-'.$uid;
+            try{
+                Actor::create(CardListActor::class,$card_list_name);
+            }catch (\Exception $e){
+
+            }
+            //生产卡牌数据
+            //添加5张卡至手卡
+            Actor::getRpc($card_list_name)->addNewCard(5);
+            $card_list[$uid] = Actor::getRpc($card_list_name)->fetchList();
+
+        }
+        //用户基本数据
+        $data = [
+            'type'=>'2001',
+            'msg'=>'玩家信息',
+            'params'=>['user_info'=>$user_info]
+        ];
+        get_instance()->pub('Room/'.$this->name,$data);
+        foreach ($card_list as $uid=>$v){
+            $data = [
+                'type'=>'2002',
+                'msg'=>'卡牌信息',
+                'params'=>['card_info'=>$v]
+            ];
+            get_instance()->pub('Player/Player-'.$uid,$data);
+        }
     }
 
     function registStatusHandle($key, $value)
