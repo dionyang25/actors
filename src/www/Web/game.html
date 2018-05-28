@@ -10,17 +10,44 @@
     <!--<meta name="apple-mobile-web-app-status-bar-style" content="black">-->
     <meta name="title" content="测试" />
     <meta name="description" content="测试" />
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 
 <body>
-<button id="enterRoom">进入房间</button>
-<button id="roomList">房间列表</button>
-<button id="exitRoom">退出房间</button>
-<button id="startGame" style="display: none">开始游戏</button>
-<div id="chatFrame">
-
+<div class="row">
+    <div class="col-md-2"><button id="enterRoom">进入房间</button></div>
+    <div class="col-md-2"><button id="roomList">房间列表</button></div>
+    <div class="col-md-2"><button id="exitRoom">退出房间</button></div>
+    <div class="col-md-2"><button id="startGame" style="display: none">开始游戏</button></div>
 </div>
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="row">
+            <div class="col-md-12 bg-info"><h4>用户信息</h4></div>
+            <div class="col-md-12 bg-warning"><h4>卡牌区</h4></div>
+        </div>
+    </div>
+    <div class="col-md-3 bg-danger">
+        <div class="row">
+            <div class="col-md-12"><h4>列表区</h4></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="row bg-success">
+            <div class="col-md-12"><h4>消息</h4></div>
+            <div class="col-md-12"><div id="chatFrame"></div></div>
+        </div>
+    </div>
+</div>
+
+
+
 <script src="/js/jquery.min.js" ></script>
+<script src="https://cdn.bootcss.com/mustache.js/2.3.0/mustache.min.js"></script>
 <script>
     let ws = new WebSocket("ws://10.64.56.79:9997");
 
@@ -87,6 +114,13 @@
     $("#startGame").click(function () {
         ws.send(JSON.stringify({'type':'startGame'}));
     });
+</script>
+<script id="roomListTable" type="text/html">
+    <table class="table table-striped">
+        <tr><th>房间名</th><th>人数</th></tr>
+        {{#RoomList}}{{/RoomList}}
+        <tr><td></td><td></td></tr>
+    </table>
 </script>
 </body>
 </html>
