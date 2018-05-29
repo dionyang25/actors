@@ -12,6 +12,7 @@
     <meta name="description" content="测试" />
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/game.css">
 </head>
 
 <body>
@@ -133,6 +134,26 @@
     $("#startGame").click(function () {
         ws.send(JSON.stringify({'type':'startGame'}));
     });
+    //为卡牌绑定事件
+    $("#cardFrame").on("click",".cardSelector a",function () {
+
+        console.log('operation',$(this).attr("operation"));
+        let operation = $(this).attr("operation");
+        if(operation == '1'){
+            operation = 'drawCard'
+        }else{
+            operation = 'coverCard'
+        }
+        let card_data = {
+           'type':operation,
+           'params':[
+                $(this).attr("operation")//card_order
+           ]
+        }
+        console.log(card_data)
+        ws.send(JSON.stringify(card_data))
+    });
+
 </script>
 <script id="roomListTable" type="text/html">
     <table class="table table-bordered">
@@ -147,10 +168,23 @@
     </table>
 </script>
 <script id="cardInfoTable" type="text/html">
-    <table id="cardList" class="table table-bordered">
-        {{#card_info}}<tr><td><img src="{{card_desc.pic}}" style="width:50px;height:50px" /></td>
-        <td>{{card_desc.name}}<br />{{card_desc.desc}}</td></tr>{{/card_info}}
+    <table id="cardList" class="table table-bordered table-hover">
+        {{#card_info}}<tr class="cardSelector" lang="{{card_order}}"><td><img src="{{card_desc.pic}}" style="width:50px;height:50px" /></td>
+        <td>{{card_desc.name}}<br />{{card_desc.desc}}</td><td>
+            <!--操作按钮-->
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    操作 <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" order="{{card_order}}" operation="1">打出</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#" order="{{card_order}}" operation="2">覆盖</a></li>
+                </ul>
+            </div>
+        </td></tr>{{/card_info}}
     </table>
+
 </script>
 </body>
 </html>

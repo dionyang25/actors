@@ -43,7 +43,25 @@ class CardListActor extends Actor{
         $this->pubCardInfo();
     }
 
-    //打出一张卡
+    //打出卡牌
+    public function draw($card_order,$object = null){
+        //获取卡组信息
+        $deck = $this->saveContext->getData()['list'];
+        if(!isset($deck[$card_order])){
+            return ['res'=>false,'msg'=>'卡组中不存在此卡'];
+        }
+        //获取该卡属性
+        $card_list = $this->config->get('cards');
+        $card_desc = $card_list[$deck[$card_order]];
+        //判断指向，如未指定，则默认选择对手
+        if($card_desc['is_object']){
+            if($object = null){
+
+            }
+        }
+        //依次处理效果
+
+    }
 
 
     //返回所有卡的属性
@@ -51,8 +69,9 @@ class CardListActor extends Actor{
         $list = $this->saveContext->getData()['list'];
         $card_list = $this->config->get('cards');
         $ret = [];
-        foreach ($list as $vo){
+        foreach ($list as $key =>$vo){
            $ret[] = [
+               'card_order'=>$key,
                'card_id'=>$vo,
                'card_desc'=>$card_list[$vo]
            ];

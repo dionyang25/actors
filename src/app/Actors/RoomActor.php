@@ -106,9 +106,12 @@ class RoomActor extends Actor{
      * @throws \Server\Asyn\MQTT\Exception
      */
     public function initGame(){
+        //设置下对手
+        $opponents[$this->saveContext->getData()['user_list'][0]] = $this->saveContext->getData()['user_list'][1];
+        $opponents[$this->saveContext->getData()['user_list'][1]] = $this->saveContext->getData()['user_list'][0];
         //为两边生成游戏数据
         foreach ($this->saveContext->getData()['user_list'] as $uid=>$val){
-            $user_info_initial = ['uid'=>$uid,'room'=>$this->name];
+            $user_info_initial = ['uid'=>$uid,'room'=>$this->name,'opponent'=>$opponents];
             //生成初始游戏数据
             try{
                 Actor::create(PlayerActor::class,'Player-'.$uid);
