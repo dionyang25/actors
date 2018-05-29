@@ -12,7 +12,7 @@ class RoomListActor extends Actor{
 
     public function info($roomActorName = ''){
         if(empty($roomActorName)){
-            return $this->saveContext->getData()['room_list'];//只有房间名和人数
+           return  $this->saveContext->getData()['room_list'];//只有房间名和人数
         }else{
             return $this->saveContext->getData()['room_list'][$roomActorName];
         }

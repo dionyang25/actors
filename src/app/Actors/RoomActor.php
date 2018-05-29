@@ -106,18 +106,19 @@ class RoomActor extends Actor{
      * @throws \Server\Asyn\MQTT\Exception
      */
     public function initGame(){
-        $user_info = [];
-        $card_list = [];
         //为两边生成游戏数据
         foreach ($this->saveContext->getData()['user_list'] as $uid=>$val){
+            $user_info_initial = ['uid'=>$uid,'room'=>$this->name];
             //生成初始游戏数据
             try{
                 Actor::create(PlayerActor::class,'Player-'.$uid);
-                Actor::getRpc('Player-'.$uid)->initData(['id'=>$uid]);
             }catch (\Exception $e){
 
             }
-            $user_info[$uid] = Actor::getRpc('Player-'.$uid)->addGameInfo(1);
+            Actor::getRpc('Player-'.$uid)->initData($user_info_initial);
+            //先后攻决定
+
+            Actor::getRpc('Player-'.$uid)->addGameInfo(1);
             //生成卡组
             $card_list_name = 'cardList-'.$uid;
             try{
@@ -125,27 +126,34 @@ class RoomActor extends Actor{
             }catch (\Exception $e){
 
             }
+            $user_info_initial['player'] = 'Player-'.$uid;
+            Actor::getRpc($card_list_name)->initData($user_info_initial);
             //生产卡牌数据
             //添加5张卡至手卡
-            Actor::getRpc($card_list_name)->addNewCard(5);
-            $card_list[$uid] = Actor::getRpc($card_list_name)->fetchList();
-
+            Actor::getRpc($card_list_name)->addNewCard(5,1,0);
         }
-        //用户基本数据
+        $this->pubGameInfo();
+    }
+
+    /**
+     * 发布房间用户游戏信息
+     * @throws
+     */
+    public function pubGameInfo(){
+        $game_info = [];
+        foreach ($this->saveContext->getData()['user_list'] as $uid=>$val){
+            $temp = Actor::getRpc('Player-'.$uid)->gameInfo();
+            $game_info[] = [
+                'info'=>$temp,
+                'uid'=>$uid
+            ];
+        }
         $data = [
             'type'=>'2001',
-            'msg'=>'玩家信息',
-            'params'=>['user_info'=>$user_info]
+            'msg'=>'用户信息',
+            'params'=>['game_info'=>$game_info]
         ];
         get_instance()->pub('Room/'.$this->name,$data);
-        foreach ($card_list as $uid=>$v){
-            $data = [
-                'type'=>'2002',
-                'msg'=>'卡牌信息',
-                'params'=>['card_info'=>$v]
-            ];
-            get_instance()->pub('Player/Player-'.$uid,$data);
-        }
     }
 
     function registStatusHandle($key, $value)

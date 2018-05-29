@@ -18,8 +18,7 @@ class PlayerActor extends Actor{
     public function initData($user_info){
         $this->saveContext['user_info'] = $user_info;
         //订阅用户消息
-        var_dump($user_info['id']);
-        get_instance()->addSub('Player/'.$this->name,$user_info['id']);
+        get_instance()->addSub('Player/'.$this->name,$user_info['uid']);
     }
 
     function registStatusHandle($key, $value)
@@ -27,15 +26,20 @@ class PlayerActor extends Actor{
         return false;
     }
 
-    public function info(){
-        return $this->saveContext->getData()['info'];
+    public function gameInfo(){
+        return $this->saveContext->getData()['game_info'];
     }
 
+    /**
+     * @param int $init 1-为初始化数据
+     * @param array $game_info
+     * @return array
+     */
     public function addGameInfo($init = 0,$game_info=[]){
         if($init){
             $game_info = [
                 'hp'=>15,
-                'card_num'=>5
+                'card_num'=>0
             ];
         }
         $this->saveContext->getData()['game_info'] = $game_info;
@@ -44,5 +48,12 @@ class PlayerActor extends Actor{
 
 //        get_instance()->pub('Room/'.$this->name,$data);
         return $game_info;
+    }
+
+    public function changeGameInfo($game_info=[]){
+        $this->saveContext->getData()['game_info'] = array_merge($this->saveContext->getData()['game_info'],$game_info);
+        $this->saveContext->save();
+        //发布信息变更
+        return $this->saveContext->getData()['game_info'];
     }
 }

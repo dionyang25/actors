@@ -2,7 +2,6 @@
 
 namespace app\Controllers;
 
-use app\Actors\CardListActor;
 use app\Actors\RoomListActor;
 use Server\CoreBase\Actor;
 use Server\CoreBase\Controller;
@@ -32,7 +31,7 @@ class Action extends Controller
     {
         $uid = time();
         $this->bindUid($uid);
-        $this->send(['type' => 'welcome','msg'=>'已连接服务器，用户id为'.$uid]);
+        $this->send(['type' => '9001','msg'=>'已连接服务器，用户id为'.$uid,'params'=>['uid'=>$uid]]);
     }
 
     /**
@@ -52,6 +51,7 @@ class Action extends Controller
             $RoomActorName = Actor::getRpc('roomList')->findAvailableRoom(1,$this->uid);
             if(!empty($RoomActorName)){
                 $this->send(['type' => '1001', 'msg' => '进入房间！房间号-'.$RoomActorName,'params'=>['room_no'=>$RoomActorName]]);
+                $this->roomList();
             }else{
                 $this->send(['type' => '102', 'msg' => '进入房间失败！']);
             }
@@ -73,6 +73,7 @@ class Action extends Controller
             //交给RoomActor退房
             Actor::getRpc($RoomActorName)->exitRoom($this->uid);
             $this->send(['type' => '1004', 'msg' => '您已退出房间']);
+            $this->roomList();
         }catch (\Exception $e){
             echo $e->getMessage();
         }
@@ -81,23 +82,15 @@ class Action extends Controller
       public function roomList(){
           try {
               $list = Actor::getRpc('roomList')->info();
-              $this->send(['type' => '1003', 'msg' => '房间列表：','params'=>['room_list'=>$list]]);
+              $ret = [];
+              foreach ($list as $key=>$val){
+                  $ret[] = ['name'=>$key,'num'=>$val];
+              }
+              $this->send(['type' => '1003', 'msg' => '房间列表：','params'=>['room_list'=>$ret]]);
           }catch (\Exception $e){
               echo $e->getMessage();
           }
       }
-
-    public function message()
-    {
-        $this->sendToAll(
-            [
-                'type' => 'message',
-                'id' => $this->uid,
-                'message' => $this->client_data->message,
-            ]
-        );
-    }
-
 
 
     /**

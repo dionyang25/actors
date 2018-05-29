@@ -12,8 +12,6 @@
     <meta name="description" content="测试" />
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -25,21 +23,27 @@
 </div>
 
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-4">
         <div class="row">
-            <div class="col-md-12 bg-info"><h4>用户信息</h4></div>
+
             <div class="col-md-12 bg-warning"><h4>卡牌区</h4></div>
+            <div class="col-md-12 bg-warning"><div id="cardFrame"></div></div>
         </div>
     </div>
-    <div class="col-md-3 bg-danger">
+    <div class="col-md-4 bg-danger">
         <div class="row">
-            <div class="col-md-12"><h4>列表区</h4></div>
+            <div class="col-md-12 bg-info"><h4>用户信息(<span id="uid"></span>)</h4></div>
+            <div class="col-md-12 bg-info"><div id="userFrame"></div></div>
+            <div class="col-md-12 bg-warning"><h4>对战区</h4></div>
+            <div class="col-md-12 bg-warning"><div id="battleFrame"></div></div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="row bg-success">
-            <div class="col-md-12"><h4>消息</h4></div>
-            <div class="col-md-12"><div id="chatFrame"></div></div>
+        <div class="row ">
+            <div class="col-md-12 bg-warning"><h4>列表区</h4></div>
+            <div class="col-md-12 bg-warning"><div id="listFrame"></div></div>
+            <div class="col-md-12 bg-success"><h4>消息</h4></div>
+            <div class="col-md-12 bg-success"><div id="chatFrame"></div></div>
         </div>
     </div>
 </div>
@@ -47,6 +51,9 @@
 
 
 <script src="/js/jquery.min.js" ></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
 <script src="https://cdn.bootcss.com/mustache.js/2.3.0/mustache.min.js"></script>
 <script>
     let ws = new WebSocket("ws://10.64.56.79:9997");
@@ -60,6 +67,7 @@
     ws.onmessage = function(evt) {
         console.log(evt);
         let evtData = JSON.parse(evt.data);
+        let list_output;
         //逻辑处理。。
         //1001 进入房间
         console.log('evtData',evtData);
@@ -75,17 +83,28 @@
                 $("#startGame").hide();
                 break;
             case '1002':
-                evtData.msg = '<div style="color:#66FFCC">'+evtData.msg+'</div>';
+                evtData.msg = '<div style="color:#e47c6c">'+evtData.msg+'</div>';
                 fMsg(evtData.msg);
                 break;
             case '1003':
+                //房间列表
+                list_output = Mustache.render($("#roomListTable").html(),evtData.params);
+                $('#listFrame').html(list_output);
+                break;
             case '2001':
+                //游戏用户信息
+                list_output = Mustache.render($("#userInfoTable").html(),evtData.params);
+                $('#userFrame').html(list_output);
+                break;
             case '2002':
-                evtData.msg = '<div style="color:#238E23">'+evtData.msg+'</div>';
-                fMsg(evtData.msg);
-                console.log('evtData.params',evtData.params);
-                fMsg('<div style="color:#238E23">'+JSON.stringify(evtData.params)+'</div>');
+                //卡牌信息
+                list_output = Mustache.render($("#cardInfoTable").html(),evtData.params);
+                $('#cardFrame').html(list_output);
             break;
+            case '9001':
+                fMsg(evtData.msg);
+                $("#uid").html(evtData.params.uid);
+                break;
             default:
                 fMsg(evtData.msg);
         }
@@ -116,10 +135,21 @@
     });
 </script>
 <script id="roomListTable" type="text/html">
-    <table class="table table-striped">
+    <table class="table table-bordered">
         <tr><th>房间名</th><th>人数</th></tr>
-        {{#RoomList}}{{/RoomList}}
-        <tr><td></td><td></td></tr>
+        {{#room_list}}<tr><td>{{name}}</td><td>{{num}}</td></tr>{{/room_list}}
+    </table>
+</script>
+<script id="userInfoTable" type="text/html">
+    <table class="table table-bordered">
+        <tr><th>用户</th><th>生命值</th><th>卡牌数</th></tr>
+        {{#game_info}}<tr><td>{{uid}}</td><td>{{info.hp}}</td><td>{{info.card_num}}</td></tr>{{/game_info}}
+    </table>
+</script>
+<script id="cardInfoTable" type="text/html">
+    <table id="cardList" class="table table-bordered">
+        {{#card_info}}<tr><td><img src="{{card_desc.pic}}" style="width:50px;height:50px" /></td>
+        <td>{{card_desc.name}}<br />{{card_desc.desc}}</td></tr>{{/card_info}}
     </table>
 </script>
 </body>
