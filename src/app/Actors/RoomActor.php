@@ -107,11 +107,12 @@ class RoomActor extends Actor{
      */
     public function initGame(){
         //设置下对手
-        $opponents[$this->saveContext->getData()['user_list'][0]] = $this->saveContext->getData()['user_list'][1];
-        $opponents[$this->saveContext->getData()['user_list'][1]] = $this->saveContext->getData()['user_list'][0];
+        $uids = array_rand($this->saveContext->getData()['user_list']);
+        $opponents[$uids[0]] = $uids[1];
+        $opponents[$uids[1]] = $uids[0];
         //为两边生成游戏数据
-        foreach ($this->saveContext->getData()['user_list'] as $uid=>$val){
-            $user_info_initial = ['uid'=>$uid,'room'=>$this->name,'opponent'=>$opponents];
+        foreach ($uids as $uid){
+            $user_info_initial = ['uid'=>$uid,'room'=>$this->name,'opponent'=>$opponents[$uid]];
             //生成初始游戏数据
             try{
                 Actor::create(PlayerActor::class,'Player-'.$uid);
