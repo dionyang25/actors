@@ -116,8 +116,13 @@ class Action extends Controller
 
     public function drawCard($card_order){
        //打出卡牌
-        $card_list_name = 'cardList-'.$this->uid;
-        $result = Actor::getRpc($card_list_name)->draw($card_order);
+        try{
+            $card_list_name = 'cardList-'.$this->uid;
+            $result = Actor::getRpc($card_list_name)->draw($card_order);
+        }catch (\Exception $e){
+            echo $e->getMessage();
+        }
+
 
     }
 

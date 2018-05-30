@@ -72,6 +72,7 @@ class RoomActor extends Actor{
         ];
         get_instance()->pub('Room/'.$this->name,$data);
         get_instance()->removeSub('Room/'.$this->name,$user_id);
+        //销毁数据
         unset($this->saveContext->getData()['user_list'][$user_id]);
         $this->saveContext->save();
         Actor::getRpc('roomList')->removeRoomUser($user_id);
@@ -84,19 +85,11 @@ class RoomActor extends Actor{
     public function startGame(){
         $num = count($this->saveContext->getData()['user_list']);
         if($num==2){
-            $data = [
-                'type'=>'1005',
-                'msg'=>'游戏开始'
-            ];
-            get_instance()->pub('Room/'.$this->name,$data);
+            $this->pubMsg(1005,'游戏开始');
             $this->initGame();
             return true;
         }else{
-            $data = [
-                'type'=>105,
-                'msg'=>'房间人数不足，无法开始游戏。'
-            ];
-            get_instance()->pub('Room/'.$this->name,$data);
+            $this->pubMsg(105,'房间人数不足，无法开始游戏。');
             return false;
         }
     }
@@ -107,7 +100,7 @@ class RoomActor extends Actor{
      */
     public function initGame(){
         //设置下对手
-        $uids = array_rand($this->saveContext->getData()['user_list']);
+        $uids = array_keys($this->saveContext->getData()['user_list']);
         $opponents[$uids[0]] = $uids[1];
         $opponents[$uids[1]] = $uids[0];
         //为两边生成游戏数据
@@ -137,6 +130,8 @@ class RoomActor extends Actor{
             Actor::getRpc($card_list_name)->addNewCard(5,1,0);
         }
         $this->pubGameInfo();
+        //开始回合
+        $this->startTurn(1);
     }
 
     /**
@@ -158,6 +153,68 @@ class RoomActor extends Actor{
             'params'=>['game_info'=>$game_info]
         ];
         get_instance()->pub('Room/'.$this->name,$data);
+    }
+
+    /**
+     * 发布房间信息
+     * @throws
+     */
+    public function pubMsg($type,$msg,$params = []){
+        $data = [
+            'type'=>(string)$type,
+            'msg'=>$msg,
+            'params'=>$params
+        ];
+        get_instance()->pub('Room/'.$this->name,$data);
+    }
+
+    /**
+     * 回合开始阶段(turn 指一人一回合)
+     * @param $first 是否第一回合
+     * @param $is_add_card 是否抽卡 >0表示要抽的卡数
+     * @return bool
+     */
+    public function startTurn($first = 0,$is_add_card=1)
+    {
+        if(empty($this->saveContext->getData()['game_info']['turn'])){
+            $this->saveContext->getData()['game_info']['turn'] = 0;
+        }
+        //加一回合
+        $this->saveContext->getData()['game_info']['turn']++;
+        if($first){
+            $this->saveContext->getData()['game_info']['turn'] = 1;
+            //随机决定先后手
+            $turn_uid = array_rand($this->saveContext->getData()['user_list']);
+        }else{
+            //交换先后手
+            $user_list = array_keys($this->saveContext->getData()['user_list']);
+            foreach ($user_list as $vo){
+                if($this->saveContext->getData()['game_info']['turn_player']!=$vo){
+                    $turn_uid = $vo;
+                    break;
+                }
+            }
+        }
+        $this->saveContext->getData()['game_info']['turn_player'] = $turn_uid;
+
+
+        //循环发布回合信息
+        foreach (array_keys($this->saveContext->getData()['user_list']) as $uid){
+            $is_turn_player = ($turn_uid == $uid)?1:0;
+            //发布信息
+            Actor::getRpc('Player-'.$uid)->pubMsg(2011,'玩家'.$turn_uid.'回合开始！',
+                ['turn'=>$this->saveContext->getData()['game_info']['turn'],'is_turn_player'=>$is_turn_player]);
+            //轮到回合的 抽卡
+            if($is_add_card>0 && $is_turn_player){
+                try{
+                    Actor::getRpc('cardList-'.$uid)->addNewCard($is_add_card);
+                }catch (\Exception $e){
+                    $e->getMessage();
+                }
+
+            }
+        }
+        $this->saveContext->save();
     }
 
     function registStatusHandle($key, $value)

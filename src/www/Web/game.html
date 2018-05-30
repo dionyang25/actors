@@ -33,15 +33,15 @@
     </div>
     <div class="col-md-4 bg-danger">
         <div class="row">
-            <div class="col-md-12 bg-info"><h4>用户信息(<span id="uid"></span>)</h4></div>
+            <div class="col-md-12 bg-info"><h4>玩家信息(<span id="uid"></span>)</h4></div>
             <div class="col-md-12 bg-info"><div id="userFrame"></div></div>
-            <div class="col-md-12 bg-warning"><h4>对战区</h4></div>
-            <div class="col-md-12 bg-warning"><div id="battleFrame"></div></div>
+            <div class="col-md-12 bg-danger"><h4>对战区（回合：<span id="turn"></span>）</h4></div>
+            <div class="col-md-12 bg-danger"><div id="battleFrame"></div></div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="row ">
-            <div class="col-md-12 bg-warning"><h4>列表区</h4></div>
+            <div class="col-md-12 bg-warning"><h4>房间列表</h4></div>
             <div class="col-md-12 bg-warning"><div id="listFrame"></div></div>
             <div class="col-md-12 bg-success"><h4>消息</h4></div>
             <div class="col-md-12 bg-success"><div id="chatFrame"></div></div>
@@ -101,7 +101,22 @@
                 //卡牌信息
                 list_output = Mustache.render($("#cardInfoTable").html(),evtData.params);
                 $('#cardFrame').html(list_output);
-            break;
+                break;
+            case '2010':
+                //对战区信息
+                fBattleMsg(evtData.msg);
+                break;
+            case '2011':
+                //回合信息（包括谁的回合)
+                $("#turn").html(evtData.params.turn);
+                //谁的回合
+                if(evtData.params.is_turn_player){
+                    $('.command-button').show();
+                }else{
+                    $('.command-button').hide();
+                }
+                fBattleMsg(evtData.msg);
+                break;
             case '9001':
                 fMsg(evtData.msg);
                 $("#uid").html(evtData.params.uid);
@@ -118,6 +133,10 @@
 
     function fMsg(msg) {
         $("#chatFrame").append(msg+'<br />');
+    }
+
+    function fBattleMsg(msg) {
+        $("#battleFrame").append(msg+'<br />');
     }
 
     $("#enterRoom").click(function () {
@@ -147,7 +166,7 @@
         let card_data = {
            'type':operation,
            'params':[
-                $(this).attr("operation")//card_order
+                $(this).attr("order")//card_order
            ]
         }
         console.log(card_data)
@@ -172,7 +191,7 @@
         {{#card_info}}<tr class="cardSelector" lang="{{card_order}}"><td><img src="{{card_desc.pic}}" style="width:50px;height:50px" /></td>
         <td>{{card_desc.name}}<br />{{card_desc.desc}}</td><td>
             <!--操作按钮-->
-            <div class="btn-group">
+            <div class="btn-group command-button">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     操作 <span class="caret"></span>
                 </button>
@@ -184,7 +203,6 @@
             </div>
         </td></tr>{{/card_info}}
     </table>
-
 </script>
 </body>
 </html>

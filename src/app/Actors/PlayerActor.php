@@ -56,4 +56,17 @@ class PlayerActor extends Actor{
         //发布信息变更
         return $this->saveContext->getData()['game_info'];
     }
+
+    /**
+     * 发布用户信息
+     * @throws
+     */
+    public function pubMsg($type,$msg,$params = []){
+        $data = [
+            'type'=>(string)$type,
+            'msg'=>$msg,
+            'params'=>$params
+        ];
+        get_instance()->pub('Player/'.$this->name,$data);
+    }
 }
