@@ -81,7 +81,6 @@ class RoomListActor extends Actor{
         $this->saveContext->getData()['user_room'][$user_id] = $RoomActorName;
         //刷新房间列表
         $this->saveContext->save();
-        var_dump(1);
         $data = [
             'type'=>'1003',
             'msg'=>'房间列表',

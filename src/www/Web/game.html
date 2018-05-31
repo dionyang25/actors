@@ -36,6 +36,11 @@
             <div class="col-md-12 bg-info"><h4>玩家信息(<span id="uid"></span>)</h4></div>
             <div class="col-md-12 bg-info"><div id="userFrame"></div></div>
             <div class="col-md-12 bg-danger"><h4>对战区（回合：<span id="turn"></span>）</h4></div>
+            <div class="col-md-12 bg-danger">
+                <div class="btn-group command-button" role="group" aria-label="..." style="display: none">
+                    <button type="button" id="endTurn" class="btn btn-default">回合结束</button>
+                </div>
+            </div>
             <div class="col-md-12 bg-danger"><div id="battleFrame"></div></div>
         </div>
     </div>
@@ -51,7 +56,7 @@
 
 
 
-<script src="/js/jquery.min.js" ></script>
+<script src="./js/jquery.min.js" ></script>
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -152,6 +157,9 @@
     });
     $("#startGame").click(function () {
         ws.send(JSON.stringify({'type':'startGame'}));
+    });
+    $("#endTurn").click(function () {
+        ws.send(JSON.stringify({'type':'endTurn'}));
     });
     //为卡牌绑定事件
     $("#cardFrame").on("click",".cardSelector a",function () {

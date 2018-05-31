@@ -220,7 +220,6 @@ class RoomActor extends Actor{
         }
         $this->saveContext->getData()['game_info']['turn_player'] = $turn_uid;
 
-
         //循环发布回合信息
         foreach (array_keys($this->saveContext->getData()['user_list']) as $uid){
             $is_turn_player = ($turn_uid == $uid)?1:0;
@@ -238,6 +237,21 @@ class RoomActor extends Actor{
             }
         }
         $this->saveContext->save();
+    }
+
+    /**
+     * 回合结束
+     */
+    public function endTurn($uid,$begin_new_turn = 0){
+
+        //结算回合结束时的buff
+
+        //发布回合结束文字
+        $this->pubMsg(2010,'第'.$this->saveContext->getData()['game_info']['turn'].'回合结束');
+        if($begin_new_turn){
+            //开启新的回合
+            $this->startTurn();
+        }
     }
 
     function registStatusHandle($key, $value)

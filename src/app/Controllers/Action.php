@@ -110,13 +110,16 @@ class Action extends Controller
             //开始游戏
             Actor::getRpc($RoomActorName)->startGame();
 
-
         }catch (\Exception $e){
 
         }
 
     }
 
+    /**
+     * 出牌
+     * @param $card_order
+     */
     public function drawCard($card_order){
        //打出卡牌
         try{
@@ -124,6 +127,26 @@ class Action extends Controller
             $result = Actor::getRpc($card_list_name)->draw($card_order);
         }catch (\Exception $e){
             echo $e->getMessage();
+        }
+    }
+
+    /**
+     * 回合结束
+     */
+    public function endTurn(){
+        try{
+            //找roomActor
+            $RoomActorName = Actor::getRpc('roomList')->hasRoom($this->uid);
+            if (!$RoomActorName) {
+                $this->send(['type' => '104', 'msg' => '您不在房间内']);
+                return;
+            }
+            //回合结束
+            Actor::getRpc($RoomActorName)->endTurn($this->uid,1);
+
+
+        }catch (\Exception $e){
+
         }
     }
 
