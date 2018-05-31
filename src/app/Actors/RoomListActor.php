@@ -10,13 +10,20 @@ class RoomListActor extends Actor{
         $this->saveContext['user_room'] = [];
     }
 
-    public function info($roomActorName = ''){
+    public function info($roomActorName = '',$style = 0){
+        $list = $this->saveContext->getData()['room_list'];
         if(empty($roomActorName)){
-           return  $this->saveContext->getData()['room_list'];//只有房间名和人数
+            if($style){
+                $ret = [];
+                foreach ($list as $key=>$val){
+                    $ret[] = ['name'=>$key,'num'=>$val];
+                }
+                return $ret;
+            }
+           return $list;//只有房间名和人数
         }else{
-            return $this->saveContext->getData()['room_list'][$roomActorName];
+           return $list;
         }
-
     }
 
     public function createRoom($enter = 0,$user_id = ''){
@@ -72,13 +79,27 @@ class RoomListActor extends Actor{
             $this->saveContext->getData()['room_list'][$RoomActorName]++;
         }
         $this->saveContext->getData()['user_room'][$user_id] = $RoomActorName;
+        //刷新房间列表
         $this->saveContext->save();
+        var_dump(1);
+        $data = [
+            'type'=>'1003',
+            'msg'=>'房间列表',
+            'params'=>['room_list'=>$this->info('',1)]
+        ];
+        Actor::getRpc($RoomActorName)->pubMsg($data['type'],$data['msg'],$data['params']);
+
     }
 
     public function removeRoomUser($user_id){
         $RoomActorName = $this->saveContext->getData()['user_room'][$user_id];
         $this->saveContext->getData()['room_list'][$RoomActorName]--;
         unset($this->saveContext->getData()['user_room'][$user_id]);
+
+        if(empty($this->saveContext->getData()['room_list'][$RoomActorName])){
+            Actor::destroyActor($RoomActorName);
+            unset($this->saveContext->getData()['room_list'][$RoomActorName]);
+        }
         $this->saveContext->save();
     }
 

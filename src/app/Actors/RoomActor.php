@@ -72,6 +72,29 @@ class RoomActor extends Actor{
         ];
         get_instance()->pub('Room/'.$this->name,$data);
         get_instance()->removeSub('Room/'.$this->name,$user_id);
+        //循环销毁游戏数据
+
+        foreach ($this->saveContext->getData()['user_list'] as $uid=>$val){
+            get_instance()->removeSub('Player/Player-'.$uid,$uid);
+            //判断是否回合开始
+            if(isset($this->saveContext->getData()['game_info'])) {
+                try {
+                    Actor::destroyActor('Player-' . $uid);
+                } catch (\Exception $e) {
+                    echo $e->getMessage();
+                }
+            }
+            if(isset($this->saveContext->getData()['game_info']['turn'])) {
+                try{
+                    Actor::destroyActor('cardList-'.$uid);
+                }catch (\Exception $e){
+                    echo $e->getMessage();
+                }
+            }
+
+        }
+        //消除回合数据
+        unset($this->saveContext->getData()['game_info']);
         //销毁数据
         unset($this->saveContext->getData()['user_list'][$user_id]);
         $this->saveContext->save();

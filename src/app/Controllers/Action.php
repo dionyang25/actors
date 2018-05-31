@@ -51,7 +51,6 @@ class Action extends Controller
             $RoomActorName = Actor::getRpc('roomList')->findAvailableRoom(1,$this->uid);
             if(!empty($RoomActorName)){
                 $this->send(['type' => '1001', 'msg' => '进入房间！房间号-'.$RoomActorName,'params'=>['room_no'=>$RoomActorName]]);
-                $this->roomList();
             }else{
                 $this->send(['type' => '102', 'msg' => '进入房间失败！']);
             }
@@ -62,6 +61,9 @@ class Action extends Controller
 
     }
 
+    /**
+     * 退房
+     */
     public function exitRoom(){
         try {
             //判断是否已在房间
@@ -79,14 +81,15 @@ class Action extends Controller
         }
     }
 
+    /**
+     * 房间列表
+     */
     public function roomList(){
           try {
-              $list = Actor::getRpc('roomList')->info();
-              $ret = [];
-              foreach ($list as $key=>$val){
-                  $ret[] = ['name'=>$key,'num'=>$val];
-              }
-              $this->send(['type' => '1003', 'msg' => '房间列表：','params'=>['room_list'=>$ret]]);
+              $list = Actor::getRpc('roomList')->info('',1);
+              $this->send(['type' => '1003', 'msg' => '房间列表：','params'=>[
+                  'room_list'=>$list
+              ]]);
           }catch (\Exception $e){
               echo $e->getMessage();
           }
@@ -122,21 +125,11 @@ class Action extends Controller
         }catch (\Exception $e){
             echo $e->getMessage();
         }
-
-
     }
 
     public function onClose()
     {
-        //删除用户对应的所有信息
-        try{
-            Actor::destroyActor('Player'.$this->uid);
-            //在房间则退房
-            $this->exitRoom();
-        }catch (\Exception $e){
-            echo $e->getMessage();
-        }
-
+        $this->exitRoom();
         $this->destroy();
     }
 
