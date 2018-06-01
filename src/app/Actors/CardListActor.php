@@ -76,6 +76,7 @@ class CardListActor extends Actor{
         $actors = ['dmg'=>['class'=>DmgActor::class,'msg'=>'对 %s 造成 %s 点伤害！']];
         $res = false;
         $word3 = '';
+        $uids = [$this->saveContext->getData()['user_info']['uid'],$this->saveContext->getData()['user_info']['opponent']];
         foreach ($card_desc['effect'] as $vo){
             try{
                 Actor::create(DmgActor::class,$vo['type']);
@@ -99,6 +100,13 @@ class CardListActor extends Actor{
             Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubGameInfo();
             //卡牌列表-发布卡牌信息
             $this->pubCardInfo();
+            //胜负逻辑判定
+            try{
+                Actor::create(VictoryActor::class,'victory');
+            }catch (\Exception $e){
+
+            }
+            Actor::getRpc('victory')->judge($uids);
             return ['res'=>true,'msg'=>''];
         }else{
             return ['res'=>false,'msg'=>''];

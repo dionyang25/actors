@@ -122,6 +122,11 @@
                 }
                 fBattleMsg(evtData.msg);
                 break;
+            case '3001':
+                //游戏结束
+                fBattleMsg(evtData.msg);
+                $('.command-button').hide();
+                break;
             case '9001':
                 fMsg(evtData.msg);
                 $("#uid").html(evtData.params.uid);

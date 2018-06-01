@@ -37,10 +37,7 @@ class PlayerActor extends Actor{
      */
     public function addGameInfo($init = 0,$game_info=[]){
         if($init){
-            $game_info = [
-                'hp'=>15,
-                'card_num'=>0
-            ];
+            $game_info = $this->config->get('users.game_initial');
         }
         $this->saveContext->getData()['game_info'] = $game_info;
         $this->saveContext->save();

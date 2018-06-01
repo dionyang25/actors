@@ -73,7 +73,19 @@ class RoomActor extends Actor{
         get_instance()->pub('Room/'.$this->name,$data);
         get_instance()->removeSub('Room/'.$this->name,$user_id);
         //循环销毁游戏数据
+        $this->exitGame();
+        //销毁数据
+        unset($this->saveContext->getData()['user_list'][$user_id]);
+        $this->saveContext->save();
+        Actor::getRpc('roomList')->removeRoomUser($user_id);
+    }
 
+    /**
+     * 退出游戏
+     * @throws
+     */
+    public function exitGame()
+    {
         foreach ($this->saveContext->getData()['user_list'] as $uid=>$val){
             get_instance()->removeSub('Player/Player-'.$uid,$uid);
             //判断是否回合开始
@@ -91,14 +103,10 @@ class RoomActor extends Actor{
                     echo $e->getMessage();
                 }
             }
-
         }
         //消除回合数据
         unset($this->saveContext->getData()['game_info']);
-        //销毁数据
-        unset($this->saveContext->getData()['user_list'][$user_id]);
         $this->saveContext->save();
-        Actor::getRpc('roomList')->removeRoomUser($user_id);
     }
 
     /**
