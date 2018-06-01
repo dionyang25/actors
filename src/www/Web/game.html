@@ -12,19 +12,20 @@
     <meta name="description" content="测试" />
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/game.css">
 </head>
 
 <body>
 <div class="row">
-    <div class="col-md-2"><button id="enterRoom">进入房间</button></div>
-    <div class="col-md-2"><button id="roomList">房间列表</button></div>
-    <div class="col-md-2"><button id="exitRoom">退出房间</button></div>
-    <div class="col-md-2"><button id="startGame" style="display: none">开始游戏</button></div>
+    <div class="col-md-12">
+        <button id="enterRoom" type="button" class="btn btn-default">进入房间</button>
+        <button id="roomList" type="button" class="btn btn-default">房间列表</button>
+        <button id="exitRoom" type="button" class="btn btn-default">退出房间</button>
+        <button id="startGame" type="button" class="btn btn-default" style="display: none">开始游戏</button>
+    </div>
 </div>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-5">
         <div class="row">
 
             <div class="col-md-12 bg-warning"><h4>卡牌区</h4></div>
@@ -41,15 +42,15 @@
                     <button type="button" id="endTurn" class="btn btn-default">回合结束</button>
                 </div>
             </div>
-            <div class="col-md-12 bg-danger"><div id="battleFrame"></div></div>
+            <div class="col-md-12 bg-danger"><div id="battleFrame" style="height:300px;"></div></div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="row ">
             <div class="col-md-12 bg-warning"><h4>房间列表</h4></div>
             <div class="col-md-12 bg-warning"><div id="listFrame"></div></div>
             <div class="col-md-12 bg-success"><h4>消息</h4></div>
-            <div class="col-md-12 bg-success"><div id="chatFrame"></div></div>
+            <div class="col-md-12 bg-success"><div id="chatFrame" style="height:200px; overflow:auto"></div></div>
         </div>
     </div>
 </div>
@@ -142,11 +143,21 @@
     };
 
     function fMsg(msg) {
-        $("#chatFrame").append(msg+'<br />');
+        let div = $("#chatFrame");
+        div.append(msg+'<br />');
+        div.scrollTop(50000);
     }
 
     function fBattleMsg(msg) {
-        $("#battleFrame").append(msg+'<br />');
+        let div = $("#battleFrame");
+        div.append(msg+'<br />');
+        div.scrollTop(50000);
+    }
+
+    //清空界面
+    function clearBoard(){
+        $('.command-button').hide();
+        $('#cardFrame').html('');
     }
 
     $("#enterRoom").click(function () {
@@ -158,7 +169,8 @@
     });
 
     $("#exitRoom").click(function () {
-        ws.send(JSON.stringify({'type':'exitRoom'}));
+        ws.send(JSON.stringify({'type':'exitRoom'}))
+        clearBoard()
     });
     $("#startGame").click(function () {
         ws.send(JSON.stringify({'type':'startGame'}));
@@ -167,7 +179,7 @@
         ws.send(JSON.stringify({'type':'endTurn'}));
     });
     //为卡牌绑定事件
-    $("#cardFrame").on("click",".cardSelector a",function () {
+    $("#cardFrame").on("click",".cardSelector button",function () {
 
         console.log('operation',$(this).attr("operation"));
         let operation = $(this).attr("operation");
@@ -195,8 +207,10 @@
 </script>
 <script id="userInfoTable" type="text/html">
     <table class="table table-bordered">
-        <tr><th>用户</th><th>生命值</th><th>卡牌数</th></tr>
-        {{#game_info}}<tr><td>{{uid}}</td><td>{{info.hp}}</td><td>{{info.card_num}}</td></tr>{{/game_info}}
+        <tr><th>用户</th><th>生命值</th><th>卡牌数</th><th>资源（火/水/风）</th></tr>
+        {{#game_info}}<tr><td>{{uid}}</td><td>{{info.hp}}</td><td>{{info.card_num}}</td>
+        <td>{{info.resource.1}}/{{info.resource.2}}/{{info.resource.3}}</td>
+    </tr>{{/game_info}}
     </table>
 </script>
 <script id="cardInfoTable" type="text/html">
@@ -204,15 +218,9 @@
         {{#card_info}}<tr class="cardSelector" lang="{{card_order}}"><td><img src="{{card_desc.pic}}" style="width:50px;height:50px" /></td>
         <td>{{card_desc.name}}<br />{{card_desc.desc}}</td><td>
             <!--操作按钮-->
-            <div class="btn-group command-button">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    操作 <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#" order="{{card_order}}" operation="1">打出</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#" order="{{card_order}}" operation="2">覆盖</a></li>
-                </ul>
+            <div class="btn-group btn-group-vertical btn-group-sm command-button">
+                <button type="button" class="btn btn-default" order="{{card_order}}" operation="1">打出</button>
+                <button type="button" class="btn btn-default" order="{{card_order}}" operation="2">覆盖</button>
             </div>
         </td></tr>{{/card_info}}
     </table>
