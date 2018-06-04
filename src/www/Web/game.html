@@ -179,7 +179,7 @@
         ws.send(JSON.stringify({'type':'endTurn'}));
     });
     //为卡牌绑定事件
-    $("#cardFrame").on("click",".cardSelector button",function () {
+    $("#cardFrame").on("click",".cardSelector a",function () {
 
         console.log('operation',$(this).attr("operation"));
         let operation = $(this).attr("operation");
@@ -218,9 +218,17 @@
         {{#card_info}}<tr class="cardSelector" lang="{{card_order}}"><td><img src="{{card_desc.pic}}" style="width:50px;height:50px" /></td>
         <td>{{card_desc.name}}<br />{{card_desc.desc}}</td><td>
             <!--操作按钮-->
-            <div class="btn-group btn-group-vertical btn-group-sm command-button">
-                <button type="button" class="btn btn-default" order="{{card_order}}" operation="1">打出</button>
-                <button type="button" class="btn btn-default" order="{{card_order}}" operation="2">覆盖</button>
+            <div class="btn-group command-button">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    操作 <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" order="{{card_order}}" operation="1">打出</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#" order="{{card_order}}" operation="2">覆盖（火）</a></li>
+                    <li><a href="#" order="{{card_order}}" operation="3">覆盖（水）</a></li>
+                    <li><a href="#" order="{{card_order}}" operation="4">覆盖（风）</a></li>
+                </ul>
             </div>
         </td></tr>{{/card_info}}
     </table>

@@ -131,6 +131,20 @@ class Action extends Controller
     }
 
     /**
+     * 覆盖卡牌 TODO
+     * @param $card_order
+     */
+    public function coverCard($card_order){
+        //打出卡牌
+        try{
+            $card_list_name = 'cardList-'.$this->uid;
+            $result = Actor::getRpc($card_list_name)->draw($card_order);
+        }catch (\Exception $e){
+            echo $e->getMessage();
+        }
+    }
+
+    /**
      * 回合结束
      */
     public function endTurn(){
