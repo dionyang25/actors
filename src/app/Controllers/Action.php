@@ -120,7 +120,7 @@ class Action extends Controller
      * 出牌
      * @param $card_order
      */
-    public function drawCard($card_order){
+    public function drawCard($card_order,$operation){
        //打出卡牌
         try{
             $card_list_name = 'cardList-'.$this->uid;
@@ -134,11 +134,11 @@ class Action extends Controller
      * 覆盖卡牌 TODO
      * @param $card_order
      */
-    public function coverCard($card_order){
+    public function coverCard($card_order,$operation){
         //打出卡牌
         try{
             $card_list_name = 'cardList-'.$this->uid;
-            $result = Actor::getRpc($card_list_name)->draw($card_order);
+            $result = Actor::getRpc($card_list_name)->cover($card_order,$operation);
         }catch (\Exception $e){
             echo $e->getMessage();
         }

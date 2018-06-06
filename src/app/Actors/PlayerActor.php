@@ -8,6 +8,7 @@
 namespace app\Actors;
 
 use Server\CoreBase\Actor;
+use Server\CoreBase\ChildProxy;
 
 class PlayerActor extends Actor{
     /**
@@ -65,5 +66,25 @@ class PlayerActor extends Actor{
             'params'=>$params
         ];
         get_instance()->pub('Player/'.$this->name,$data);
+    }
+
+    /**
+     * buff结算
+     */
+    public function calcBuff(){
+        if(!empty($this->saveContext->getData()['game_info']['buff'])){
+            foreach ($this->saveContext->getData()['game_info']['buff'] as $key=>&$val){
+                switch ($key){
+                    //盖卡buff
+                    default:
+                        --$val[0];
+                        if($val[0]<=0){
+                            unset($this->saveContext->getData()['game_info']['buff'][$key]);
+                        }
+                        break;
+                }
+
+            }
+        }
     }
 }

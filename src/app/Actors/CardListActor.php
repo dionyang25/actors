@@ -13,6 +13,8 @@ class CardListActor extends Actor{
 
     public function initData($user_info){
         $this->saveContext['user_info'] = $user_info;
+        $this->saveContext['list'] = [];//卡组列表
+        $this->saveContext['cover'] = [];//覆盖卡的列表
     }
 
     /**
@@ -66,6 +68,8 @@ class CardListActor extends Actor{
         //获取该卡属性
         $card_list = $this->config->get('cards');
         $card_desc = $card_list[$deck[$card_order]];
+        //资源校验
+
         //判断指向，如未指定，则默认选择对手
         if($card_desc['is_object']){
             if($object == null){
@@ -91,6 +95,7 @@ class CardListActor extends Actor{
             //从卡牌列表中移除
             unset($this->saveContext->getData()['list'][$card_order]);
             $this->saveContext->save();
+            //扣除资源
 
             $modal = '玩家 %s 打出 %s ,%s!';
             $modal = sprintf($modal,$this->saveContext->getData()['user_info']['uid'],$card_desc['name'],$word3);
@@ -113,6 +118,52 @@ class CardListActor extends Actor{
         }
     }
 
+    /**
+     * 覆盖卡牌
+     * @param $card_order
+     * @param $operation
+     * @return array
+     * @throws \Server\Asyn\MQTT\Exception
+     */
+    public function cover($card_order,$operation){
+
+        $game_info = Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->gameInfo();
+        //检查buff 已覆盖过则提示已覆盖了
+        if(!empty($game_info['buff']['is_cover'])){
+            Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->pubMsg('2010','每回合只能覆盖一张卡');
+            return false;
+        }
+        //获取卡组信息
+        $deck = $this->saveContext->getData()['list'];
+        if(!isset($deck[$card_order])){
+            return ['res'=>false,'msg'=>'卡组中不存在此卡'];
+        }
+        //获取该卡属性
+        $card_list = $this->config->get('cards');
+        $card_desc = $card_list[$deck[$card_order]];
+        //增加对应资源
+        $resource_config = $this->config->get('users.resource');
+        $increase = isset($card_desc['resource'])?$card_desc['resource']:$resource_config['default_increase'];
+        $game_info['resource'][$operation] += $increase;
+        //增加至覆盖列表@TODO
+
+        //从卡牌列表中移除
+        unset($this->saveContext->getData()['list'][$card_order]);
+        $this->saveContext->save();
+        //减少一张卡
+        $game_info['card_num']--;
+        //增加buff
+        $game_info['buff']['is_cover'] = [1,[]];
+        Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->changeGameInfo($game_info);
+        //发布资源消息
+        $modal = '玩家'.$this->saveContext->getData()['user_info']['uid'].'覆盖一张卡,'.$resource_config[$operation].'属性资源+'.$increase;
+        Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubMsg('2010',$modal);
+        //房间-发布用户信息
+        Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubGameInfo();
+        //卡牌列表-发布卡牌信息
+        $this->pubCardInfo();
+        return true;
+    }
 
     //返回所有卡的属性
     public function fetchList(){
@@ -143,6 +194,12 @@ class CardListActor extends Actor{
         get_instance()->pub('Player/'.$this->saveContext->getData()['user_info']['player'],$data);
     }
 
+    /**
+     * 卡牌资源校验
+     */
+    private function checkCardResource(){
+
+    }
 
     function registStatusHandle($key, $value)
     {

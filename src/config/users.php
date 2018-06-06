@@ -14,11 +14,12 @@ $config['users']['game_initial'] = [
 ];
 
 $config['users']['resource'] =[
-    1 =>'fire',
-    2 =>'water',
-    3 =>'wind',
-    'fire'=>1,
-    'water'=>2,
-    'wind'=>3
+    1 =>'火',
+    2 =>'水',
+    3 =>'风',
+    '火'=>1,
+    '水'=>2,
+    '风'=>3,
+    'default_increase'=>2
 ];
 return $config;

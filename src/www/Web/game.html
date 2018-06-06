@@ -42,7 +42,7 @@
                     <button type="button" id="endTurn" class="btn btn-default">回合结束</button>
                 </div>
             </div>
-            <div class="col-md-12 bg-danger"><div id="battleFrame" style="height:300px;"></div></div>
+            <div class="col-md-12 bg-danger"><div id="battleFrame" style="height:300px; overflow:auto"></div></div>
         </div>
     </div>
     <div class="col-md-3">
@@ -145,13 +145,13 @@
     function fMsg(msg) {
         let div = $("#chatFrame");
         div.append(msg+'<br />');
-        div.scrollTop(50000);
+        div.scrollTop(80000);
     }
 
     function fBattleMsg(msg) {
         let div = $("#battleFrame");
         div.append(msg+'<br />');
-        div.scrollTop(50000);
+        div.scrollTop(80000);
     }
 
     //清空界面
@@ -183,15 +183,16 @@
 
         console.log('operation',$(this).attr("operation"));
         let operation = $(this).attr("operation");
-        if(operation == '1'){
-            operation = 'drawCard'
+        let action;
+        if(operation == '10'){
+            action = 'drawCard'
         }else{
-            operation = 'coverCard'
+            action = 'coverCard'
         }
         let card_data = {
-           'type':operation,
+           'type':action,
            'params':[
-                $(this).attr("order")//card_order
+                $(this).attr("order"),operation//card_order,operation
            ]
         }
         console.log(card_data)
@@ -223,11 +224,11 @@
                     操作 <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#" order="{{card_order}}" operation="1">打出</a></li>
+                    <li><a href="#" order="{{card_order}}" operation="10">打出</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="#" order="{{card_order}}" operation="2">覆盖（火）</a></li>
-                    <li><a href="#" order="{{card_order}}" operation="3">覆盖（水）</a></li>
-                    <li><a href="#" order="{{card_order}}" operation="4">覆盖（风）</a></li>
+                    <li><a href="#" order="{{card_order}}" operation="1">覆盖（火）</a></li>
+                    <li><a href="#" order="{{card_order}}" operation="2">覆盖（水）</a></li>
+                    <li><a href="#" order="{{card_order}}" operation="3">覆盖（风）</a></li>
                 </ul>
             </div>
         </td></tr>{{/card_info}}

@@ -252,8 +252,8 @@ class RoomActor extends Actor{
      */
     public function endTurn($uid,$begin_new_turn = 0){
 
-        //结算回合结束时的buff
-
+        //结算该玩家回合结束时的buff
+        Actor::getRpc('Player-'.$uid)->calcBuff();
         //发布回合结束文字
         $this->pubMsg(2010,'第'.$this->saveContext->getData()['game_info']['turn'].'回合结束');
         if($begin_new_turn){
