@@ -79,7 +79,7 @@ $config['cards'] = [
                 'value'=>1
             ]
         ],
-        'is_object'=>0,
+        'is_object'=>1,
         'resource'=>3
     ],
     5=>[
