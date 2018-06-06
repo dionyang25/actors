@@ -14,9 +14,6 @@ php vendor/tmtbe/swooledistributed/src/Install.php
 php start_swoole_server.php start
 ```
 
-然后访问游览器
-```
-http://localhost:8081
-```
 
-在线实例：http://114.55.253.83:8081/
+
+在线实例：http://47.98.112.137/game.html
