@@ -81,6 +81,26 @@ $config['cards'] = [
         ],
         'is_object'=>0,
         'resource'=>3
-    ]
+    ],
+    5=>[
+        'name'=>'风之领域-S',
+        'desc'=>'发动风神之力，己方抽2张牌（资源：0/0/2，风）',
+        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528283922356&di=db5772d4d18772d47598ce31c5c6bd63&imgtype=0&src=http%3A%2F%2Fimg4.duitang.com%2Fuploads%2Fitem%2F201407%2F02%2F20140702102150_JZhcc.jpeg',
+        'property'=>[
+            3=>2
+        ],
+        'effect'=>[
+            [
+                'type'=>'opcard',
+                'method'=>'draw',
+                'object'=>0,//表示自己
+                'value'=>2
+            ]
+        ],
+        'is_object'=>0
+    ],
+//    6=>[
+//        'name'=>'水之颂歌',
+//    ]
 ];
 return $config;

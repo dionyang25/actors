@@ -81,19 +81,27 @@ class CardListActor extends Actor{
             }
         }
         //依次处理效果
-        $actors = ['dmg'=>['class'=>DmgActor::class,'msg'=>'对 %s 造成 %s 点伤害！']];
+        $actors = [
+            'dmg'=>['class'=>DmgActor::class,'msg'=>'对 %s 造成 %s 点伤害！'],
+            'opcard'=>['class'=>OpcardActor::class,'msg'=>'使用风神之力，获得卡牌']
+        ];
+
+
+
         $res = false;
         $word3 = '';
         $uids = [$this->saveContext->getData()['user_info']['uid'],$this->saveContext->getData()['user_info']['opponent']];
         foreach ($card_desc['effect'] as $vo){
             try{
-                Actor::create(DmgActor::class,$vo['type']);
+                Actor::create($actors[$vo['type']]['class'],$vo['type']);
             }catch (\Exception $e){
-
+                echo $e->getMessage();
             }
             //处理效果
             $res = Actor::getRpc($vo['type'])->dealEffect($vo,$this->saveContext->getData()['user_info']['uid'],$object);
-            $word3 .= sprintf($actors[$vo['type']]['msg'],$object,$vo['value']);
+            if(isset($actors[$vo['type']]['msg'])){
+                $word3 .= sprintf($actors[$vo['type']]['msg'],$object,$vo['value']);
+            }
         }
         if($res){
             //从卡牌列表中移除
@@ -196,6 +204,16 @@ class CardListActor extends Actor{
             'params'=>['card_info'=>$card_list]
         ];
         get_instance()->pub('Player/'.$this->saveContext->getData()['user_info']['player'],$data);
+    }
+
+    /**
+     * 增加卡牌计数 可传负数
+     */
+    public function addCardNum($uid,$num=-1){
+        $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
+        $game_info['card_num'] +=$num;
+        if($game_info['card_num']<0){$game_info['card_num'] = 0;}
+        return Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
     }
 
     function registStatusHandle($key, $value)
