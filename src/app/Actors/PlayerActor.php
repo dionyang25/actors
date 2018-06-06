@@ -87,4 +87,23 @@ class PlayerActor extends Actor{
             }
         }
     }
+
+    /**
+     * 卡牌资源校验/扣除
+     * is_done =1 扣除资源
+     */
+    public function checkCardResource($card_desc,$is_done=0){
+        $temp = [];
+        foreach ($card_desc['property'] as $key=>$val){
+            $temp[$key] = $this->saveContext->getData()['game_info']['resource'][$key] - $val;
+            if ($temp[$key]<0){
+                return false;
+            }
+        }
+        if($is_done){
+            $this->saveContext->getData()['game_info']['resource'] =
+                $temp + $this->saveContext->getData()['game_info']['resource'];
+        }
+        return true;
+    }
 }

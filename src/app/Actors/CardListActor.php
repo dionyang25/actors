@@ -68,8 +68,12 @@ class CardListActor extends Actor{
         //获取该卡属性
         $card_list = $this->config->get('cards');
         $card_desc = $card_list[$deck[$card_order]];
-        //资源校验
-
+        //资源校验，直接返回扣除后的数据
+        if(!Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->checkCardResource($card_desc)){
+            //发布卡牌效果消息
+            Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubMsg('2010','资源不足');
+            return ['res'=>false,'msg'=>'资源不足'];
+        }
         //判断指向，如未指定，则默认选择对手
         if($card_desc['is_object']){
             if($object == null){
@@ -96,7 +100,7 @@ class CardListActor extends Actor{
             unset($this->saveContext->getData()['list'][$card_order]);
             $this->saveContext->save();
             //扣除资源
-
+            Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->checkCardResource($card_desc,1);
             $modal = '玩家 %s 打出 %s ,%s!';
             $modal = sprintf($modal,$this->saveContext->getData()['user_info']['uid'],$card_desc['name'],$word3);
             //发布卡牌效果消息
@@ -192,13 +196,6 @@ class CardListActor extends Actor{
             'params'=>['card_info'=>$card_list]
         ];
         get_instance()->pub('Player/'.$this->saveContext->getData()['user_info']['player'],$data);
-    }
-
-    /**
-     * 卡牌资源校验
-     */
-    private function checkCardResource(){
-
     }
 
     function registStatusHandle($key, $value)
