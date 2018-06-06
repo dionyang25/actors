@@ -70,8 +70,8 @@ class CardListActor extends Actor{
         $card_desc = $card_list[$deck[$card_order]];
         //资源校验，直接返回扣除后的数据
         if(!Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->checkCardResource($card_desc)){
-            //发布卡牌效果消息
-            Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubMsg('2010','资源不足');
+            //资源不足
+            Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->pubMsg('2010','资源不足');
             return ['res'=>false,'msg'=>'资源不足'];
         }
         //判断指向，如未指定，则默认选择对手
