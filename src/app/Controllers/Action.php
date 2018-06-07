@@ -2,6 +2,7 @@
 
 namespace app\Controllers;
 
+use app\Actors\RandomNameActor;
 use app\Actors\RoomListActor;
 use Server\CoreBase\Actor;
 use Server\CoreBase\Controller;
@@ -25,13 +26,19 @@ class Action extends Controller
         }catch (\Exception $e){
 
         }
+        try {
+            //创建名字
+            Actor::create(RandomNameActor::class, 'randomName');
+        }catch (\Exception $e){
+
+        }
     }
 
     public function connect()
     {
-        $uid = time();
+        $uid = Actor::getRpc('randomName')->getName();
         $this->bindUid($uid);
-        $this->send(['type' => '9001','msg'=>'已连接服务器，用户id为'.$uid,'params'=>['uid'=>$uid]]);
+        $this->send(['type' => '9001','msg'=>'欢迎 '.$uid.' 连接服务器!','params'=>['uid'=>$uid]]);
     }
 
     /**
@@ -169,6 +176,10 @@ class Action extends Controller
     {
         $this->exitRoom();
         $this->destroy();
+    }
+
+    private function getRandomName(){
+
     }
 
 //    public function onConnect()
