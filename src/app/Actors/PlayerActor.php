@@ -69,7 +69,7 @@ class PlayerActor extends Actor{
     }
 
     /**
-     * buff结算
+     * 回合结束的buff结算
      */
     public function calcBuff(){
         if(!empty($this->saveContext->getData()['game_info']['buff'])){

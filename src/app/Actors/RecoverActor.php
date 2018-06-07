@@ -4,30 +4,27 @@
  * User: yanghaonan
  * Date: 2018/5/29
  * Time: 下午7:01
- * 卡牌伤害actor
+ * 回复 净化相关actor
  */
 namespace app\Actors;
 
 use Server\CoreBase\Actor;
 
-class DmgActor extends Actor{
+class RecoverActor extends Actor{
 
 
     public function dealEffect($effect,$origin_uid,$object = null){
         if(!is_array($object) && $object!=null){
             $object = [$object];
         }else{
-            return false;
+            //默认回复自己
+            $object = [$origin_uid];
         }
-        //查看伤害增益buff
-
         //指向伤害
         foreach ($object as $uid){
             //获取用户ip
             $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
-
-
-            $game_info['hp'] -= $effect['value'];
+            $game_info['hp'] += $effect['value'];
             Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
         }
         //自己减少一张手牌计数

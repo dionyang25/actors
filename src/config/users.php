@@ -6,7 +6,7 @@
  * Time: 14:52
  */
 $config['users']['game_initial'] = [
-    'hp'=>15,
+    'hp'=>150,
     'card_num'=>0,
     'resource'=>[
         1=>0,2=>0,3=>0

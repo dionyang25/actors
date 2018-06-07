@@ -76,15 +76,12 @@ class CardListActor extends Actor{
         }
         //判断指向，如未指定，则默认选择对手
         if($card_desc['is_object']){
-            if($object == null || $object == 12){
-                $object = $this->saveContext->getData()['user_info']['opponent'];
-            }else{
-                $object = $this->saveContext->getData()['user_info']['uid'];
-            }
+            $object = $this->genObject($object);
         }
         //依次处理效果
         $actors = [
             'dmg'=>['class'=>DmgActor::class,'msg'=>'对 %s 造成 %s 点伤害！'],
+            'recover'=>['class'=>RecoverActor::class,'msg'=>' %s 回复 %s 点生命！'],
             'opcard'=>['class'=>OpcardActor::class,'msg'=>'使用风神之力，获得卡牌']
         ];
 
@@ -99,6 +96,10 @@ class CardListActor extends Actor{
             }catch (\Exception $e){
                 echo $e->getMessage();
             }
+            //卡牌内部指向判断
+            if(empty($card_desc['is_object'])){
+                $object = (isset($vo['object']))?$this->genObject($vo['object']):null;
+            }
             //处理效果
             $res = Actor::getRpc($vo['type'])->dealEffect($vo,$this->saveContext->getData()['user_info']['uid'],$object);
             if(isset($actors[$vo['type']]['msg'])){
@@ -111,7 +112,7 @@ class CardListActor extends Actor{
             $this->saveContext->save();
             //扣除资源
             Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->checkCardResource($card_desc,1);
-            $modal = '玩家 %s 打出 %s ,%s!';
+            $modal = '玩家 %s 打出 %s ,%s';
             $modal = sprintf($modal,$this->saveContext->getData()['user_info']['uid'],$card_desc['name'],$word3);
             //发布卡牌效果消息
             Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubMsg('2010',$modal);
@@ -216,6 +217,22 @@ class CardListActor extends Actor{
         $game_info['card_num'] +=$num;
         if($game_info['card_num']<0){$game_info['card_num'] = 0;}
         return Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
+    }
+
+    /**
+     * 指向判定
+     * @param string $object  12-对手 13-自己
+     */
+    private function genObject($object){
+        switch ($object){
+            case 12:
+                $object = $this->saveContext->getData()['user_info']['opponent'];
+                break;
+            case 13:
+                $object = $this->saveContext->getData()['user_info']['uid'];
+                break;
+        }
+        return $object;
     }
 
     function registStatusHandle($key, $value)
