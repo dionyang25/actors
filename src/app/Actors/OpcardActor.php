@@ -22,7 +22,7 @@ class OpcardActor extends Actor{
         switch ($effect['method']){
             //抽牌
             case 'draw':
-                if(isset($effect['object']) && $effect['object'] == 13){
+                if(isset($effect['object']) && $effect['object'] == 12){
                     //对手
                 }else{
                     Actor::getRpc('cardList-'.$origin_uid)->addNewCard($effect['value']);
