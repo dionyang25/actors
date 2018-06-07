@@ -8,7 +8,7 @@
 $config['cards'] = [
     0=>[
         'name'=>'水之矢',
-        'desc'=>'打出水之箭，造成10点水属性伤害（资源：0/1/0，水）',
+        'desc'=>'打出水之箭，造成12点水属性伤害（资源：0/1/0，水）',
         'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1527585796422&di=ecb0fe795f56bc509f73aeafc27d0836&imgtype=jpg&src=http%3A%2F%2Fimg2.imgtn.bdimg.com%2Fit%2Fu%3D3590960182%2C1982815395%26fm%3D214%26gp%3D0.jpg',
         'property'=>[
             2=>1
@@ -16,14 +16,14 @@ $config['cards'] = [
         'effect'=>[
             [
                 'type'=>'dmg',
-                'value'=>10
+                'value'=>12
             ]
         ],
         'is_object'=>1
     ],
     1=>[
         'name'=>'火球',
-        'desc'=>'打出火球，造成10点火属性伤害（资源：1/0/0，火）',
+        'desc'=>'打出火球，造成12点火属性伤害（资源：1/0/0，火）',
         'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1527585838480&di=34ed5d095fb230468395d861a51304a1&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F11%2F31%2F09%2F35J58PICZRd.jpg',
         'property'=>[
             1=>1
@@ -31,14 +31,14 @@ $config['cards'] = [
         'effect'=>[
             [
                 'type'=>'dmg',
-                'value'=>10
+                'value'=>12
             ]
         ],
         'is_object'=>1
     ],
     2=>[
         'name'=>'风之刃',
-        'desc'=>'打出风刃，造成10点风属性伤害（资源：0/0/1，风）',
+        'desc'=>'打出风刃，造成12点风属性伤害（资源：0/0/1，风）',
         'pic'=>'https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1528272881&di=bb0f73ae3d6ba21b0a1cd808c23edbb4&src=http://images.17173.com/2012/news/2012/06/28/gxy0628cm02s.jpg',
         'property'=>[
             3=>1
@@ -46,14 +46,14 @@ $config['cards'] = [
         'effect'=>[
             [
                 'type'=>'dmg',
-                'value'=>10
+                'value'=>12
             ]
         ],
         'is_object'=>1
     ],
     3=>[
         'name'=>'燃烧之息',
-        'desc'=>'燃尽一切，造成20点火属性伤害（资源：2/0/0，火）',
+        'desc'=>'燃尽一切，造成22点火属性伤害（资源：2/0/0，火）',
         'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528284051004&di=27dd2c2aecfd5e13a4907cbd4c5dfab3&imgtype=0&src=http%3A%2F%2Fp0.ifengimg.com%2Fpmop%2F2017%2F0925%2FEABD48779A1D89F9B37CE5DE3FEB9CF64DFA2EFF_size13_w461_h261.jpeg',
         'property'=>[
             1=>2
@@ -61,7 +61,7 @@ $config['cards'] = [
         'effect'=>[
             [
                 'type'=>'dmg',
-                'value'=>20
+                'value'=>22
             ]
         ],
         'is_object'=>1
@@ -134,6 +134,24 @@ $config['cards'] = [
             ]
         ],
         'is_object'=>1,
+    ],
+    8=>[
+        'name'=>'风之精灵',
+        'desc'=>'自身获得buff：自己的4回合内自身造成的任意伤害+10（资源：1/1/3，风）',
+        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528373507016&di=2af9cf04be8f901e2fd010b42e2b5cfc&imgtype=0&src=http%3A%2F%2Fimg1.comic.zongheng.com%2Fcomic%2Fimage%2F2009%2F2%2Fs164849750%2F500_500%2F20090307091428079196.jpg',
+        'property'=>[
+            1=>1,2=>1,3=>3
+        ],
+        'effect'=>[
+            [
+                'type'=>'buff',
+                'section'=>'dmg',
+                'value'=>10,
+                'object'=>13,
+                'turns'=>4
+            ]
+        ],
+        'is_object'=>0,
     ]
 ];
 return $config;

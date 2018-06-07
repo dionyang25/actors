@@ -19,15 +19,15 @@ class DmgActor extends Actor{
         }else{
             return false;
         }
-        //查看伤害增益buff
-
+        //查看自身伤害增益buff
+        $dmg_value = Actor::getRpc('Player-'.$origin_uid)->getBuffInfo('dmg');
+        if(empty($dmg_value)){$dmg_value = 0;}
         //指向伤害
         foreach ($object as $uid){
-            //获取用户ip
+            //获取用户hp
+            //查看对手伤害加深buff
             $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
-
-
-            $game_info['hp'] -= $effect['value'];
+            $game_info['hp'] -= ($effect['value']+$dmg_value);
             Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
         }
         //自己减少一张手牌计数

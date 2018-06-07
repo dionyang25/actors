@@ -82,7 +82,8 @@ class CardListActor extends Actor{
         $actors = [
             'dmg'=>['class'=>DmgActor::class,'msg'=>'对 %s 造成 %s 点伤害！'],
             'recover'=>['class'=>RecoverActor::class,'msg'=>' %s 回复 %s 点生命！'],
-            'opcard'=>['class'=>OpcardActor::class,'msg'=>'使用风神之力，获得卡牌']
+            'opcard'=>['class'=>OpcardActor::class,'msg'=>'使用风神之力，获得卡牌'],
+            'buff'=>['class'=>BuffActor::class,'msg'=>'%s 获得光环！']
         ];
 
 
@@ -168,7 +169,7 @@ class CardListActor extends Actor{
         //减少一张卡
         $game_info['card_num']--;
         //增加buff
-        $game_info['buff']['is_cover'] = [1,[]];
+        $game_info['buff']['is_cover'] = [1,''];
         Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->changeGameInfo($game_info);
         //发布资源消息
         $modal = '玩家'.$this->saveContext->getData()['user_info']['uid'].'覆盖一张卡,'.$resource_config[$operation].'属性资源+'.$increase;

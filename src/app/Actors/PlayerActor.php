@@ -106,4 +106,15 @@ class PlayerActor extends Actor{
         }
         return true;
     }
+
+    /**
+     * 获取buff的数值
+     */
+    public function getBuffInfo($buff_type){
+        $game_info = $this->gameInfo();
+        if(isset($game_info['buff'][$buff_type])){
+            return $game_info['buff'][$buff_type][1];
+        }
+        return false;
+    }
 }

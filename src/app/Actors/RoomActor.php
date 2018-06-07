@@ -173,6 +173,9 @@ class RoomActor extends Actor{
         $game_info = [];
         foreach ($this->saveContext->getData()['user_list'] as $uid=>$val){
             $temp = Actor::getRpc('Player-'.$uid)->gameInfo();
+            if(!empty($temp['buff'])){
+                $temp['buff'] = $this->dealBuffInfo($temp['buff']);
+            }
             $game_info[] = [
                 'info'=>$temp,
                 'uid'=>$uid
@@ -260,6 +263,26 @@ class RoomActor extends Actor{
             //开启新的回合
             $this->startTurn();
         }
+    }
+
+    /**
+     * 整合buff信息
+     */
+    private function dealBuffInfo($buff){
+        if(empty($buff)){
+            return [];
+        }
+        $res = [];
+        $name = $this->config->get('users.buff');
+        foreach ($buff as $key=>$val){
+            $res[]=[
+              'type'=>$key,
+              'name'=>$name[$key],
+              'turns'=>$val[0],
+              'value'=>$val[1]>0?'+'.$val[1]:$val[1]
+            ];
+        }
+        return $res;
     }
 
     function registStatusHandle($key, $value)

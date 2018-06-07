@@ -209,10 +209,14 @@
 </script>
 <script id="userInfoTable" type="text/html">
     <table class="table table-bordered">
-        <tr><th>用户</th><th>生命值</th><th>卡牌数</th><th>资源（火/水/风）</th></tr>
-        {{#game_info}}<tr><td>{{uid}}</td><td>{{info.hp}}</td><td>{{info.card_num}}</td>
-        <td>{{info.resource.1}}/{{info.resource.2}}/{{info.resource.3}}</td>
-    </tr>{{/game_info}}
+        <tr><th>用户</th><th>生命</th><th>卡牌数</th><th>资源（火/水/风）</th><th>光环</th></tr>
+        {{#game_info}}
+        <tr>
+            <td>{{uid}}</td><td>{{info.hp}}</td><td>{{info.card_num}}</td>
+            <td>{{info.resource.1}}/{{info.resource.2}}/{{info.resource.3}}</td>
+            <td>{{#info.buff}}{{name}}{{value}}({{turns}}) {{/info.buff}}</td>
+        </tr>
+        {{/game_info}}
     </table>
 </script>
 <script id="cardInfoTable" type="text/html">

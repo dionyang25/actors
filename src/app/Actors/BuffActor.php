@@ -20,26 +20,20 @@ class BuffActor extends Actor{
      * @return bool
      */
     public function dealEffect($effect,$origin_uid,$object = null){
-//        if(!is_array($object) && $object!=null){
-//            $object = [$object];
-//        }else{
-//            return false;
-//        }
-        switch ($effect['method']){
-            //抽牌
-            case 'draw':
-                if(isset($effect['object']) && $effect['object'] == 1){
 
-                }else{
-                    Actor::getRpc('cardList-'.$origin_uid)->addNewCard($effect['value']);
-                    //自己减少一张手牌计数
-                    Actor::getRpc('cardList-'.$origin_uid)->addCardNum($origin_uid,-1);
-                    return true;
-                }
-
-                break;
-            case 'discard':
-                break;
+        if(!is_array($object) && $object!=null){
+            $object = [$object];
+        }else{
+            return false;
+        }
+        foreach ($object as $uid){
+            //上buff 有相同的则覆盖
+            $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
+            $game_info['buff'][$effect['section']] = [$effect['turns'],$effect['value']];
+            Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
+            //自己减少一张手牌计数
+            Actor::getRpc('cardList-'.$origin_uid)->addCardNum($origin_uid,-1);
+            return true;
         }
     }
 

@@ -22,4 +22,9 @@ $config['users']['resource'] =[
     '风'=>3,
     'default_increase'=>2
 ];
+
+$config['users']['buff'] =[
+    'dmg' =>'伤害',
+    'is_cover'=>'覆盖'
+];
 return $config;
