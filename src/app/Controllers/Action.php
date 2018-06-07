@@ -119,12 +119,13 @@ class Action extends Controller
     /**
      * 出牌
      * @param $card_order
+     * @paramk $operation object 11-不取对象 12-对手 13-自己
      */
-    public function drawCard($card_order,$operation){
+    public function drawCard($card_order,$operation = 0){
        //打出卡牌
         try{
             $card_list_name = 'cardList-'.$this->uid;
-            $result = Actor::getRpc($card_list_name)->draw($card_order);
+            $result = Actor::getRpc($card_list_name)->draw($card_order,$operation);
         }catch (\Exception $e){
             echo $e->getMessage();
         }

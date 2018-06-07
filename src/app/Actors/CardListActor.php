@@ -76,8 +76,10 @@ class CardListActor extends Actor{
         }
         //判断指向，如未指定，则默认选择对手
         if($card_desc['is_object']){
-            if($object == null){
+            if($object == null || $object == 12){
                 $object = $this->saveContext->getData()['user_info']['opponent'];
+            }else{
+                $object = $this->saveContext->getData()['user_info']['uid'];
             }
         }
         //依次处理效果

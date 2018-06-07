@@ -183,9 +183,9 @@
     $("#cardFrame").on("click",".cardSelector a",function () {
 
         console.log('operation',$(this).attr("operation"));
-        let operation = $(this).attr("operation");
+        let operation = parseInt($(this).attr("operation"));
         let action;
-        if(operation == '10'){
+        if(operation >10){
             action = 'drawCard'
         }else{
             action = 'coverCard'
@@ -225,7 +225,13 @@
                     操作 <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#" order="{{card_order}}" operation="10">打出</a></li>
+                    {{#card_desc.is_object}}
+                    <li><a href="#" order="{{card_order}}" operation="12">打出->对手</a></li>
+                    <li><a href="#" order="{{card_order}}" operation="13">打出->自己</a></li>
+                    {{/card_desc.is_object}}
+                    {{^card_desc.is_object}}
+                    <li><a href="#" order="{{card_order}}" operation="11">打出</a></li>
+                    {{/card_desc.is_object}}
                     <li role="separator" class="divider"></li>
                     <li><a href="#" order="{{card_order}}" operation="1">覆盖（火）</a></li>
                     <li><a href="#" order="{{card_order}}" operation="2">覆盖（水）</a></li>
