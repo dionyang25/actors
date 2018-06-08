@@ -28,4 +28,8 @@ $config['users']['buff'] =[
     'is_cover'=>'覆盖',
     'cover'=>'加速'
 ];
+
+$config['users']['card'] =[
+    'limit' =>10
+];
 return $config;

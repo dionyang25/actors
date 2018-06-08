@@ -31,11 +31,17 @@ class CardListActor extends Actor{
                 $key = array_rand($card_list);
                 $this->saveContext->getData()['list'][] = $key;
             }
-            $this->saveContext->save();
+
         }
         //更新玩家的卡片数量显示
         $game_info = Actor::getRpc($this->saveContext->getData()['user_info']['player'])->gameInfo();
         $game_info['card_num'] += $num;
+        //爆牌判定
+        if($game_info['card_num']>$this->config['users']['card']['limit']){
+            $this->saveContext->getData()['list'] = array_slice($this->saveContext->getData()['list'],0,$this->config['users']['card']['limit']);
+            $game_info['card_num'] = 10;
+        }
+        $this->saveContext->save();
         Actor::getRpc($this->saveContext->getData()['user_info']['player'])->changeGameInfo($game_info);
         if($is_pub_user_info){
             //房间-发布用户信息
