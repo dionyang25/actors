@@ -116,6 +116,10 @@ class RoomActor extends Actor{
     public function startGame(){
         $num = count($this->saveContext->getData()['user_list']);
         if($num==2){
+            if(!empty($this->saveContext->getData()['game_info']['turn'])){
+                $this->pubMsg(205,'游戏已经开始了。');
+                return false;
+            }
             $this->pubMsg(1005,'游戏开始');
             $this->initGame();
             return true;

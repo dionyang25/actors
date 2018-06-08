@@ -115,6 +115,7 @@ class Action extends Controller
                 return;
             }
             //开始游戏
+
             Actor::getRpc($RoomActorName)->startGame();
 
         }catch (\Exception $e){
