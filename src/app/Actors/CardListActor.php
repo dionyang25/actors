@@ -161,7 +161,7 @@ class CardListActor extends Actor{
         $game_info['resource'][$operation] += $increase;
         //检查资源增益buff
         if(!empty($game_info['buff']['cover'])){
-            $game_info['resource'][$operation] += $game_info['buff']['cover'];
+            $game_info['resource'][$operation] += $game_info['buff']['cover'][1];
             if($game_info['resource'][$operation]<0){$game_info['resource'][$operation]=0;}
         }
 
