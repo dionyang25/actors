@@ -33,11 +33,11 @@ class CardListActor extends Actor{
             }
             $this->saveContext->save();
         }
+        //更新玩家的卡片数量显示
+        $game_info = Actor::getRpc($this->saveContext->getData()['user_info']['player'])->gameInfo();
+        $game_info['card_num'] += $num;
+        Actor::getRpc($this->saveContext->getData()['user_info']['player'])->changeGameInfo($game_info);
         if($is_pub_user_info){
-            //更新玩家的卡片数量显示
-            $game_info = Actor::getRpc($this->saveContext->getData()['user_info']['player'])->gameInfo();
-            $game_info['card_num'] += $num;
-            Actor::getRpc($this->saveContext->getData()['user_info']['player'])->changeGameInfo($game_info);
             //房间-发布用户信息
             Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubGameInfo();
         }
