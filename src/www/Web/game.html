@@ -28,7 +28,7 @@
 <div class="row">
     <div class="col-md-5">
         <div class="row">
-            <div class="col-md-12 bg-warning"><h4>卡牌区 <span id="cardPic"></span> </h4></div>
+            <div class="col-md-12 bg-warning"><h4>卡牌区 <span id="cardPic" class="command-button"></span> </h4></div>
             <div class="col-md-12 bg-warning"><div id="cardFrame" style="height:250px;overflow:auto;"></div></div>
         </div>
     </div>
@@ -36,7 +36,7 @@
         <div class="row">
             <div class="col-md-12 bg-info"><h4>玩家信息(<span id="uid"></span>)</h4></div>
             <div class="col-md-12 bg-info"><div id="userFrame"></div></div>
-            <div class="col-md-12 bg-danger"><h4>消息（回合：<span id="turn"></span>）</h4></div>
+            <div class="col-md-12 bg-danger"><h4>消息（回合：<span id="turn" class="command-button"></span>）</h4></div>
             <div class="col-md-12 bg-danger"><div id="battleFrame" style="height:150px; overflow:auto"></div></div>
         </div>
     </div>
@@ -86,6 +86,7 @@
             case '1002':
                 evtData.msg = '<div style="color:#e47c6c">'+evtData.msg+'</div>';
                 fMsg(evtData.msg);
+                clearBoard();
                 break;
             case '1003':
                 //房间列表
