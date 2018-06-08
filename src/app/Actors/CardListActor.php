@@ -97,10 +97,8 @@ class CardListActor extends Actor{
             }catch (\Exception $e){
                 echo $e->getMessage();
             }
-            //卡牌内部指向判断
-            if(empty($card_desc['is_object'])){
-                $object = (isset($vo['object']))?$this->genObject($vo['object']):null;
-            }
+            //卡牌内部指向判断（处理以内部指向优先）
+            $object = (isset($vo['object']))?$this->genObject($vo['object']):$object;
             //处理效果
             $res = Actor::getRpc($vo['type'])->dealEffect($vo,$this->saveContext->getData()['user_info']['uid'],$object);
             if(isset($actors[$vo['type']]['msg'])){
@@ -161,6 +159,12 @@ class CardListActor extends Actor{
         $resource_config = $this->config->get('users.resource');
         $increase = isset($card_desc['resource'])?$card_desc['resource']:$resource_config['default_increase'];
         $game_info['resource'][$operation] += $increase;
+        //检查资源增益buff
+        if(!empty($game_info['buff']['cover'])){
+            $game_info['resource'][$operation] += $game_info['buff']['cover'];
+            if($game_info['resource'][$operation]<0){$game_info['resource'][$operation]=0;}
+        }
+
         //增加至覆盖列表@TODO
 
         //从卡牌列表中移除

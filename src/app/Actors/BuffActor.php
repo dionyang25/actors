@@ -27,8 +27,11 @@ class BuffActor extends Actor{
             return false;
         }
         foreach ($object as $uid){
-            //上buff 有相同的则覆盖
+            //上buff 有相同的buff 叠加数值 不叠加回合
             $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
+            if(isset($game_info['buff'][$effect['section']][1]) && is_int($game_info['buff'][$effect['section']][1])){
+                $effect['value'] += $game_info['buff'][$effect['section']][1];
+            }
             $game_info['buff'][$effect['section']] = [$effect['turns'],$effect['value']];
             Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
             //自己减少一张手牌计数

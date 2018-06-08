@@ -53,7 +53,7 @@ $config['cards'] = [
     ],
     3=>[
         'name'=>'燃烧之息',
-        'desc'=>'燃尽一切，造成22点火属性伤害（资源：2/0/0，火）',
+        'desc'=>'燃尽一切，造成23点火属性伤害（资源：2/0/0，火）',
         'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528284051004&di=27dd2c2aecfd5e13a4907cbd4c5dfab3&imgtype=0&src=http%3A%2F%2Fp0.ifengimg.com%2Fpmop%2F2017%2F0925%2FEABD48779A1D89F9B37CE5DE3FEB9CF64DFA2EFF_size13_w461_h261.jpeg',
         'property'=>[
             1=>2
@@ -61,22 +61,22 @@ $config['cards'] = [
         'effect'=>[
             [
                 'type'=>'dmg',
-                'value'=>22
+                'value'=>23
             ]
         ],
         'is_object'=>1
     ],
     4=>[
         'name'=>'湛蓝宝典',
-        'desc'=>'打出：造成8点水属性伤害（资源：0/2/0，水），覆盖：增加3点资源',
+        'desc'=>'打出：回复18点生命值（资源：0/2/0，水），覆盖：增加3点资源',
         'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528283922356&di=db5772d4d18772d47598ce31c5c6bd63&imgtype=0&src=http%3A%2F%2Fimg4.duitang.com%2Fuploads%2Fitem%2F201407%2F02%2F20140702102150_JZhcc.jpeg',
         'property'=>[
             2=>2
         ],
         'effect'=>[
             [
-                'type'=>'dmg',
-                'value'=>8
+                'type'=>'recover',
+                'value'=>18
             ]
         ],
         'is_object'=>1,
@@ -101,7 +101,7 @@ $config['cards'] = [
     ],
     6=>[
         'name'=>'潮漩之歌',
-        'desc'=>'对对手造成23点水伤害，自己回复32点生命（资源：0/4/1，水）',
+        'desc'=>'对对手造成23点水属性伤害，自己回复32点生命（资源：0/4/1，水）',
         'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528967212&di=255fa3f82130cb69a967180d7f5a7df5&imgtype=jpg&er=1&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimgad%2Fpic%2Fitem%2F80cb39dbb6fd5266c10cc92fa018972bd40736e1.jpg',
         'property'=>[
             2=>4,3=>1
@@ -137,7 +137,7 @@ $config['cards'] = [
     ],
     8=>[
         'name'=>'风之精灵',
-        'desc'=>'自身获得buff：自己的4回合内自身造成的任意伤害+10（资源：1/1/3，风）',
+        'desc'=>'自己的4回合内造成的任意伤害+10（资源：1/1/3，风，buff）',
         'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528373507016&di=2af9cf04be8f901e2fd010b42e2b5cfc&imgtype=0&src=http%3A%2F%2Fimg1.comic.zongheng.com%2Fcomic%2Fimage%2F2009%2F2%2Fs164849750%2F500_500%2F20090307091428079196.jpg',
         'property'=>[
             1=>1,2=>1,3=>3
@@ -152,6 +152,65 @@ $config['cards'] = [
             ]
         ],
         'is_object'=>0,
-    ]
+    ],
+    9=>[
+        'name'=>'风之镰',
+        'desc'=>'造成35点风属性伤害，自身抽一张卡（资源：0/0/4，风）',
+        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528439878986&di=56aaf79a0eeed222e2ccb1477c73f352&imgtype=0&src=http%3A%2F%2Fimg01.3dmgame.com%2Fuploads%2Fallimg%2F140220%2F235_140220210407_1_lit.jpg',
+        'property'=>[
+            3=>4
+        ],
+        'effect'=>[
+            [
+                'type'=>'dmg',
+                'value'=>35
+            ],
+            [
+                'type'=>'opcard',
+                'method'=>'draw',
+                'object'=>13,//表示自己
+                'value'=>1
+            ]
+        ],
+        'is_object'=>1,
+    ],
+    10=>[
+        'name'=>'水之精灵',
+        'desc'=>'五回合内，自身获得的所有资源+1（资源：0/2/0，水，buff）',
+        'pic'=>'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3227131090,1779620457&fm=27&gp=0.jpg',
+        'property'=>[
+            2=>2
+        ],
+        'effect'=>[
+            [
+                'type'=>'buff',
+                'section'=>'cover',
+                'value'=>1,
+                'object'=>13,
+                'turns'=>5
+            ]
+        ],
+        'is_object'=>0,
+    ],
+    11=>[
+        'name'=>'炎之精灵',
+        'desc'=>'五回合内，对手获得的所有资源-1（资源：3/0/0，火，buff），覆盖：增加3点资源',
+        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528439925360&di=26007def9adf842cbe50376baf401143&imgtype=0&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fbaike%2Fw%253D268%253Bg%253D0%2Fsign%3De19bb3a5c9177f3e1034fb0b48f45cfa%2Fd6ca7bcb0a46f21f8e5a7f40f6246b600c33aeb2.jpg',
+        'property'=>[
+            1=>3
+        ],
+        'effect'=>[
+            [
+                'type'=>'buff',
+                'section'=>'cover',
+                'value'=>-1,
+                'object'=>12,
+                'turns'=>5
+            ]
+        ],
+        'resource'=>3,
+        'is_object'=>0,
+    ],
+
 ];
 return $config;

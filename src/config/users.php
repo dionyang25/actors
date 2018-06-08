@@ -25,6 +25,7 @@ $config['users']['resource'] =[
 
 $config['users']['buff'] =[
     'dmg' =>'伤害',
-    'is_cover'=>'覆盖'
+    'is_cover'=>'覆盖',
+    'cover'=>'加速'
 ];
 return $config;

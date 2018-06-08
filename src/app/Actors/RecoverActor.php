@@ -20,11 +20,14 @@ class RecoverActor extends Actor{
             //默认回复自己
             $object = [$origin_uid];
         }
-        //指向伤害
+        //指向回复
         foreach ($object as $uid){
             //获取用户ip
             $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
             $game_info['hp'] += $effect['value'];
+            if($game_info['hp']>$this->config['users']['game_initial']['hp']){
+                $game_info['hp'] = $this->config['users']['game_initial']['hp'];
+            }
             Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
         }
         //自己减少一张手牌计数
