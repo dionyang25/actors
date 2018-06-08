@@ -176,7 +176,7 @@ $config['cards'] = [
     ],
     10=>[
         'name'=>'水之精灵',
-        'desc'=>'五回合内，自身获得的所有资源+1（资源：0/2/0，水，buff）',
+        'desc'=>'6回合内，自身获得的所有资源+1（资源：0/2/0，水，buff）',
         'pic'=>'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3227131090,1779620457&fm=27&gp=0.jpg',
         'property'=>[
             2=>2
@@ -187,14 +187,14 @@ $config['cards'] = [
                 'section'=>'cover',
                 'value'=>1,
                 'object'=>13,
-                'turns'=>5
+                'turns'=>6
             ]
         ],
         'is_object'=>0,
     ],
     11=>[
         'name'=>'炎之精灵',
-        'desc'=>'五回合内，对手获得的所有资源-1（资源：2/0/1，火，buff），覆盖：增加3点资源',
+        'desc'=>'5回合内，对手获得的所有资源-1（资源：2/0/1，火，buff），覆盖：增加3点资源',
         'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528439925360&di=26007def9adf842cbe50376baf401143&imgtype=0&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fbaike%2Fw%253D268%253Bg%253D0%2Fsign%3De19bb3a5c9177f3e1034fb0b48f45cfa%2Fd6ca7bcb0a46f21f8e5a7f40f6246b600c33aeb2.jpg',
         'property'=>[
             1=>2,2=>0,3=>1
