@@ -28,9 +28,8 @@
 <div class="row">
     <div class="col-md-5">
         <div class="row">
-
-            <div class="col-md-12 bg-warning"><h4>卡牌区</h4></div>
-            <div class="col-md-12 bg-warning"><div id="cardFrame" style="height:270px; overflow:auto"></div></div>
+            <div class="col-md-12 bg-warning"><h4>卡牌区 <span id="cardPic"></span> </h4></div>
+            <div class="col-md-12 bg-warning"><div id="cardFrame" style="height:250px;overflow:auto;"></div></div>
         </div>
     </div>
     <div class="col-md-4 bg-danger">
@@ -102,7 +101,9 @@
             case '2002':
                 //卡牌信息
                 list_output = Mustache.render($("#cardInfoTable").html(),evtData.params);
+                let card_pic_output = Mustache.render($("#cardPicList").html(),evtData.params)
                 $('#cardFrame').html(list_output);
+                $('#cardPic').html(card_pic_output);
                 break;
             case '2010':
                 //对战区信息
@@ -212,9 +213,11 @@
         {{/game_info}}
     </table>
 </script>
+<script id="cardPicList" type="text/html">
+    {{#card_info}}<img src="{{card_desc.pic}}" style="width:30px;height:30px;margin-right: 10px" />{{/card_info}}
+</script>
 <script id="cardInfoTable" type="text/html">
     <table id="cardList" class="table table-bordered table-hover">
-        <div>{{#card_info}}<img src="{{card_desc.pic}}" style="width:30px;height:30px;margin-right: 10px" />{{/card_info}}</div>
         {{#card_info}}<tr class="cardSelector" lang="{{card_order}}"><td><img src="{{card_desc.pic}}" style="width:50px;height:50px" /></td>
         <td>{{card_desc.name}}<br />{{card_desc.desc}}</td><td>
             <!--操作按钮-->
@@ -222,7 +225,7 @@
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     操作 <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu" style="left:-70px;z-index:99;">
+                <ul class="dropdown-menu" style="left:-100px;top:-50px;">
                     {{#card_desc.is_object}}
                     <li><a href="#" order="{{card_order}}" operation="12">打出->对手</a></li>
                     <li><a href="#" order="{{card_order}}" operation="13">打出->自己</a></li>
