@@ -4,6 +4,7 @@
  * User: yanghaonan
  * Date: 2018/5/22
  * Time: 14:40
+ * 和卡牌有关的卡牌效果
  */
 namespace app\Actors;
 

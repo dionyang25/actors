@@ -38,6 +38,13 @@ class BuffActor extends Actor{
         }
     }
 
+    /**
+     * 持续性buff 效果触发
+     * @param $key
+     * @param $value
+     * @return bool
+     */
+
     function registStatusHandle($key, $value)
     {
         return false;
