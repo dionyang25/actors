@@ -34,8 +34,6 @@ class BuffActor extends Actor{
             }
             $game_info['buff'][$effect['section']] = [$effect['turns'],$effect['value']];
             Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
-            //自己减少一张手牌计数
-            Actor::getRpc('cardList-'.$origin_uid)->addCardNum($origin_uid,-1);
             return true;
         }
     }

@@ -33,11 +33,11 @@ class CardListActor extends Actor{
             }
             $this->saveContext->save();
         }
-        //更新玩家的卡片数量显示
-        $game_info = Actor::getRpc($this->saveContext->getData()['user_info']['player'])->gameInfo();
-        $game_info['card_num'] += $num;
-        Actor::getRpc($this->saveContext->getData()['user_info']['player'])->changeGameInfo($game_info);
         if($is_pub_user_info){
+            //更新玩家的卡片数量显示
+            $game_info = Actor::getRpc($this->saveContext->getData()['user_info']['player'])->gameInfo();
+            $game_info['card_num'] += $num;
+            Actor::getRpc($this->saveContext->getData()['user_info']['player'])->changeGameInfo($game_info);
             //房间-发布用户信息
             Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubGameInfo();
         }
@@ -109,6 +109,9 @@ class CardListActor extends Actor{
             //从卡牌列表中移除
             unset($this->saveContext->getData()['list'][$card_order]);
             $this->saveContext->save();
+            //计算列表 更新卡牌数
+            $game_info['card_num'] = count($this->saveContext->getData()['list']);
+            Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->changeGameInfo($game_info);
             //扣除资源
             Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->checkCardResource($card_desc,1);
             $modal = '玩家 %s 打出 %s ,%s';
@@ -170,8 +173,8 @@ class CardListActor extends Actor{
         //从卡牌列表中移除
         unset($this->saveContext->getData()['list'][$card_order]);
         $this->saveContext->save();
-        //减少一张卡
-        $game_info['card_num']--;
+        //计算列表 更新卡牌数
+        $game_info['card_num'] = count($this->saveContext->getData()['list']);
         //增加buff
         $game_info['buff']['is_cover'] = [1,''];
         Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->changeGameInfo($game_info);

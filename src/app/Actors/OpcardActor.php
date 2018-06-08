@@ -25,9 +25,7 @@ class OpcardActor extends Actor{
                 if(isset($effect['object']) && $effect['object'] == 12){
                     //对手
                 }else{
-                    Actor::getRpc('cardList-'.$origin_uid)->addNewCard($effect['value']);
-                    //自己减少一张手牌计数
-                    Actor::getRpc('cardList-'.$origin_uid)->addCardNum($origin_uid,-1);
+                    Actor::getRpc('cardList-'.$origin_uid)->addNewCard($effect['value'],1,0,0);
                     return true;
                 }
 

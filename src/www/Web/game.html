@@ -37,7 +37,7 @@
         <div class="row">
             <div class="col-md-12 bg-info"><h4>玩家信息(<span id="uid"></span>)</h4></div>
             <div class="col-md-12 bg-info"><div id="userFrame"></div></div>
-            <div class="col-md-12 bg-danger"><h4>消息（对战回合：<span id="turn"></span>）</h4></div>
+            <div class="col-md-12 bg-danger"><h4>消息（回合：<span id="turn"></span>）</h4></div>
             <div class="col-md-12 bg-danger"><div id="battleFrame" style="height:150px; overflow:auto"></div></div>
         </div>
     </div>
@@ -97,6 +97,7 @@
                 //游戏用户信息
                 list_output = Mustache.render($("#userInfoTable").html(),evtData.params);
                 $('#userFrame').html(list_output);
+                $(".show_"+$("#uid").html()).css('color','blue')
                 break;
             case '2002':
                 //卡牌信息
@@ -203,7 +204,7 @@
     <table class="table table-bordered">
         <tr><th>用户</th><th>生命</th><th>卡牌数</th><th>资源（火/水/风）</th><th>光环</th></tr>
         {{#game_info}}
-        <tr>
+        <tr class="show_{{uid}}">
             <td>{{uid}}</td><td>{{info.hp}}</td><td>{{info.card_num}}</td>
             <td>{{info.resource.1}}/{{info.resource.2}}/{{info.resource.3}}</td>
             <td>{{#info.buff}}{{name}}{{value}}({{turns}}) {{/info.buff}}</td>
@@ -221,7 +222,7 @@
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     操作 <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu" style="left:-70px">
+                <ul class="dropdown-menu" style="left:-70px;z-index:99;">
                     {{#card_desc.is_object}}
                     <li><a href="#" order="{{card_order}}" operation="12">打出->对手</a></li>
                     <li><a href="#" order="{{card_order}}" operation="13">打出->自己</a></li>

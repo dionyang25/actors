@@ -30,8 +30,7 @@ class DmgActor extends Actor{
             $game_info['hp'] -= ($effect['value']+$dmg_value);
             Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
         }
-        //自己减少一张手牌计数
-        Actor::getRpc('cardList-'.$origin_uid)->addCardNum($origin_uid,-1);
+        
         return true;
 
     }
