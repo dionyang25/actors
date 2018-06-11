@@ -84,22 +84,14 @@ class CardListActor extends Actor{
         if($card_desc['is_object']){
             $object = $this->genObject($object);
         }
-        //依次处理效果
-        $actors = [
-            'dmg'=>['class'=>DmgActor::class,'msg'=>'对 %s 造成 %s 点伤害！'],
-            'recover'=>['class'=>RecoverActor::class,'msg'=>' %s 回复 %s 点生命！'],
-            'opcard'=>['class'=>OpcardActor::class,'msg'=>'使用风神之力，获得卡牌'],
-            'buff'=>['class'=>BuffActor::class,'msg'=>'%s 获得光环！']
-        ];
-
-
 
         $res = false;
         $word3 = '';
         $uids = [$this->saveContext->getData()['user_info']['uid'],$this->saveContext->getData()['user_info']['opponent']];
         foreach ($card_desc['effect'] as $vo){
             try{
-                Actor::create($actors[$vo['type']]['class'],$vo['type']);
+//                Actor::create($actors[$vo['type']]['class'],$vo['type']);
+                Actor::create('app\\Actors\\'.ucfirst($vo['type'].'Actor'),$vo['type']);
             }catch (\Exception $e){
                 echo $e->getMessage();
             }
@@ -107,11 +99,9 @@ class CardListActor extends Actor{
             $object = (isset($vo['object']))?$this->genObject($vo['object']):$object;
             //处理效果
             $res = Actor::getRpc($vo['type'])->dealEffect($vo,$this->saveContext->getData()['user_info']['uid'],$object);
-            if(isset($actors[$vo['type']]['msg'])){
-                $word3 .= sprintf($actors[$vo['type']]['msg'],$object,$vo['value']);
-            }
         }
         if($res){
+            $word3 .= $res['msg'];
             //从卡牌列表中移除
             unset($this->saveContext->getData()['list'][$card_order]);
             $this->saveContext->save();
@@ -237,7 +227,7 @@ class CardListActor extends Actor{
      * 指向判定
      * @param string $object  12-对手 13-自己
      */
-    private function genObject($object){
+    public function genObject($object){
         switch ($object){
             case 12:
                 $object = $this->saveContext->getData()['user_info']['opponent'];

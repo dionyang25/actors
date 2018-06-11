@@ -26,7 +26,9 @@ $config['users']['resource'] =[
 $config['users']['buff'] =[
     'dmg' =>'伤害',
     'is_cover'=>'覆盖',
-    'cover'=>'加速'
+    'cover'=>'资源加速',
+    'duration_dmg'=>'持续伤害',
+    'duration_recover'=>'持续回复',
 ];
 
 $config['users']['card'] =[

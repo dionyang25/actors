@@ -14,6 +14,7 @@ class DmgActor extends Actor{
 
 
     public function dealEffect($effect,$origin_uid,$object = null){
+        var_dump($effect);
         if(!is_array($object) && $object!=null){
             $object = [$object];
         }else{
@@ -23,15 +24,17 @@ class DmgActor extends Actor{
         $dmg_value = Actor::getRpc('Player-'.$origin_uid)->getBuffInfo('dmg');
         if(empty($dmg_value)){$dmg_value = 0;}
         //指向伤害
+        $msg = '';
         foreach ($object as $uid){
             //获取用户hp
             //查看对手伤害加深buff
             $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
             $game_info['hp'] -= ($effect['value']+$dmg_value);
             Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
+            $msg .= sprintf('对 %s 造成 %s 点伤害！',$uid,$effect['value']);
         }
-        
-        return true;
+        //组织msg
+        return ['msg'=>$msg];
 
     }
 

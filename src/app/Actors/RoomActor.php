@@ -251,6 +251,12 @@ class RoomActor extends Actor{
 
             }
         }
+        //回合开始时，判断持续性光环
+        try{
+            Actor::create(BuffActor::class,'buff');
+        }catch (\Exception $e){
+            $e->getMessage();
+        }
         $this->saveContext->save();
     }
 
@@ -260,9 +266,16 @@ class RoomActor extends Actor{
     public function endTurn($uid,$begin_new_turn = 0){
 
         //结算该玩家回合结束时的buff
+        $duration_buff = Actor::getRpc('buff')->durationBuff($uid,array_keys($this->saveContext->getData()['user_list']));
+        $msg = '';
+        if($duration_buff && !empty($duration_buff['msg'])){
+            $msg.= $duration_buff['msg'];
+        }
+        //buff回合数-1
         Actor::getRpc('Player-'.$uid)->calcBuff();
+
         //发布回合结束文字
-        $this->pubMsg(2010,'第'.$this->saveContext->getData()['game_info']['turn'].'回合结束');
+        $this->pubMsg(2010,$msg.'。第'.$this->saveContext->getData()['game_info']['turn'].'回合结束');
         if($begin_new_turn){
             //开启新的回合
             $this->startTurn();
@@ -279,6 +292,9 @@ class RoomActor extends Actor{
         $res = [];
         $name = $this->config->get('users.buff');
         foreach ($buff as $key=>$val){
+            if(isset($val[2][0]['value'])){
+                $val[1] = $val[2][0]['value'];
+            }
             $res[]=[
               'type'=>$key,
               'name'=>$name[$key],

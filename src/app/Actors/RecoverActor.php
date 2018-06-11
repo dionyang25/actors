@@ -20,6 +20,7 @@ class RecoverActor extends Actor{
             //默认回复自己
             $object = [$origin_uid];
         }
+        $msg = '%s 回复 %s 点生命！';
         //指向回复
         foreach ($object as $uid){
             //获取用户ip
@@ -29,8 +30,9 @@ class RecoverActor extends Actor{
                 $game_info['hp'] = $this->config['users']['game_initial']['hp'];
             }
             Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
+            $msg .= sprintf('对 %s 造成 %s 点伤害！',$uid,$effect['value']);
         }
-        return true;
+        return ['msg'=>$msg];
 
     }
 

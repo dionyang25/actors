@@ -4,6 +4,7 @@
  * User: yanghaonan
  * Date: 2018/5/22
  * Time: 14:52
+ * 12-对手 13-自己
  */
 $config['cards'] = [
     0=>[
@@ -68,7 +69,7 @@ $config['cards'] = [
     ],
     4=>[
         'name'=>'湛蓝宝典',
-        'desc'=>'打出：回复18点生命值（资源：0/2/0，水），覆盖：增加3点资源',
+        'desc'=>'打出：回复20点生命值（资源：0/2/0，水），覆盖：增加3点资源',
         'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528283922356&di=db5772d4d18772d47598ce31c5c6bd63&imgtype=0&src=http%3A%2F%2Fimg4.duitang.com%2Fuploads%2Fitem%2F201407%2F02%2F20140702102150_JZhcc.jpeg',
         'property'=>[
             2=>2
@@ -76,7 +77,7 @@ $config['cards'] = [
         'effect'=>[
             [
                 'type'=>'recover',
-                'value'=>18
+                'value'=>20
             ]
         ],
         'is_object'=>1,
@@ -211,6 +212,78 @@ $config['cards'] = [
         'resource'=>3,
         'is_object'=>0,
     ],
-
+    12=>[
+        'name'=>'火山弹雨',
+        'desc'=>'3回合内，每回合在目标的结束阶段，对目标造成11点火属性伤害（资源：3/0/0，火，buff）',
+        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528712456022&di=9537833974c8961e0c75d5212252533a&imgtype=0&src=http%3A%2F%2Fimg3.cache.netease.com%2Fphoto%2F0001%2F2010-06-30%2F6ADTQ7OS05RQ0001.jpg',
+        'property'=>[
+            1=>3,
+        ],
+        'effect'=>[
+            [
+                'type'=>'buff',
+                'section'=>'duration_dmg',
+                'value'=>'',
+                'turns'=>3,
+                'duration'=>[
+                    [
+                        'type'=>'dmg',
+                        'value'=>11,
+                        'object'=>13
+                    ]
+                ]
+            ]
+        ],
+        'is_object'=>1,
+    ],
+    13=>[
+        'name'=>'圣灵术',
+        'desc'=>'3回合内，每回合在目标的结束阶段，回复目标10点生命值（资源：0/3/0，水，buff），覆盖：增加3点资源',
+        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1529307234&di=f88ece6c16e9330e77cc22835c9086c6&imgtype=jpg&er=1&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimgad%2Fpic%2Fitem%2F500fd9f9d72a605971fb25322334349b033bba2b.jpg',
+        'property'=>[
+            2=>3,
+        ],
+        'effect'=>[
+            [
+                'type'=>'buff',
+                'section'=>'duration_recover',
+                'value'=>'',
+                'turns'=>3,
+                'duration'=>[
+                    [
+                        'type'=>'recover',
+                        'value'=>10,
+                        'object'=>13
+                    ]
+                ]
+            ]
+        ],
+        'resource'=>3,
+        'is_object'=>1,
+    ],
+//    14=>[
+//        'name'=>'复苏术',
+//        'desc'=>'清除自身所有负面buff效果（资源：0/3/1，水，buff）',
+//        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1529307234&di=f88ece6c16e9330e77cc22835c9086c6&imgtype=jpg&er=1&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimgad%2Fpic%2Fitem%2F500fd9f9d72a605971fb25322334349b033bba2b.jpg',
+//        'property'=>[
+//            2=>3,
+//        ],
+//        'effect'=>[
+//            [
+//                'type'=>'buff',
+//                'section'=>'duration_recover',
+//                'value'=>'',
+//                'turns'=>3,
+//                'duration'=>[
+//                    [
+//                        'type'=>'recover',
+//                        'value'=>11,
+//                        'object'=>13
+//                    ]
+//                ]
+//            ]
+//        ],
+//        'is_object'=>1,
+//    ]
 ];
 return $config;
