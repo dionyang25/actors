@@ -82,7 +82,6 @@ class BuffActor extends Actor{
 
             }
             Actor::getRpc('victory')->judge($uids);
-            var_dump($msg);
             return ['msg'=>$msg];
         }
         return false;

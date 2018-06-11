@@ -34,7 +34,7 @@
     </div>
     <div class="col-md-4 bg-danger">
         <div class="row">
-            <div class="col-md-12 bg-info"><h4>玩家信息(<span id="uid"></span>)</h4></div>
+            <div class="col-md-12 bg-info"><h4>玩家信息(<span id="is_turn_player"></span><span id="uid"></span>)</h4></div>
             <div class="col-md-12 bg-info"><div id="userFrame"></div></div>
             <div class="col-md-12 bg-danger"><h4>消息（回合：<span id="turn"></span>）</h4></div>
             <div class="col-md-12 bg-danger"><div id="battleFrame" style="height:150px; overflow:auto"></div></div>
@@ -116,8 +116,10 @@
                 //谁的回合
                 if(evtData.params.is_turn_player){
                     $('.command-button').show();
+                    $("#is_turn_player").html('->')
                 }else{
                     $('.command-button').hide();
+                    $("#is_turn_player").html('')
                 }
                 fBattleMsg(evtData.msg);
                 break;

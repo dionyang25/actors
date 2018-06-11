@@ -14,7 +14,6 @@ class DmgActor extends Actor{
 
 
     public function dealEffect($effect,$origin_uid,$object = null){
-        var_dump($effect);
         if(!is_array($object) && $object!=null){
             $object = [$object];
         }else{
