@@ -99,9 +99,9 @@ class CardListActor extends Actor{
             $object = (isset($vo['object']))?$this->genObject($vo['object']):$object;
             //处理效果
             $res = Actor::getRpc($vo['type'])->dealEffect($vo,$this->saveContext->getData()['user_info']['uid'],$object);
+            $word3 .= $res['msg'];
         }
         if($res){
-            $word3 .= $res['msg'];
             //从卡牌列表中移除
             unset($this->saveContext->getData()['list'][$card_order]);
             $this->saveContext->save();

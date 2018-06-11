@@ -27,7 +27,7 @@ class OpcardActor extends Actor{
                     //对手
                 }else{
                     Actor::getRpc('cardList-'.$origin_uid)->addNewCard($effect['value'],1,0,0);
-                    $msg .= sprintf('%s 借助风神之力，抽 %s 张牌！',$effect['object'],$effect['value']);
+                    $msg .= sprintf('%s 借助风神之力，抽 %s 张牌！',$origin_uid,$effect['value']);
                     return ['msg'=>$msg];
                 }
 
