@@ -269,13 +269,13 @@ class RoomActor extends Actor{
         $duration_buff = Actor::getRpc('buff')->durationBuff($uid,array_keys($this->saveContext->getData()['user_list']));
         $msg = '';
         if($duration_buff && !empty($duration_buff['msg'])){
-            $msg.= $duration_buff['msg'];
+            $msg.= $duration_buff['msg']."\n";
         }
         //buff回合数-1
         Actor::getRpc('Player-'.$uid)->calcBuff();
 
         //发布回合结束文字
-        $this->pubMsg(2010,$msg.'。第'.$this->saveContext->getData()['game_info']['turn'].'回合结束');
+        $this->pubMsg(2010,$msg.'第'.$this->saveContext->getData()['game_info']['turn'].'回合结束');
         if($begin_new_turn){
             //开启新的回合
             $this->startTurn();
