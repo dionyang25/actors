@@ -30,7 +30,7 @@ class DmgActor extends Actor{
             $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
             $game_info['hp'] -= ($effect['value']+$dmg_value);
             Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
-            $msg .= sprintf('对 %s 造成 %s 点伤害！',$uid,$effect['value']);
+            $msg .= sprintf('对 %s 造成 %s 点伤害！',$uid,$effect['value']+$dmg_value);
         }
         //组织msg
         return ['msg'=>$msg];
