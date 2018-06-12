@@ -213,9 +213,9 @@ $config['cards'] = [
         'is_object'=>0,
     ],
     12=>[
-        'name'=>'火山弹雨',
-        'desc'=>'3回合内，每回合在目标的结束阶段，对目标造成11点火属性伤害（资源：3/0/0，火，buff）',
-        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528712456022&di=9537833974c8961e0c75d5212252533a&imgtype=0&src=http%3A%2F%2Fimg3.cache.netease.com%2Fphoto%2F0001%2F2010-06-30%2F6ADTQ7OS05RQ0001.jpg',
+        'name'=>'火灵术',
+        'desc'=>'3回合内，每回合在自己的结束阶段，对对手造成11点火属性伤害（资源：3/0/0，火，buff）',
+        'pic'=>'https://img.moegirl.org/common/thumb/c/c1/Spiritual_Fire_Art_-_Kurenai.jpg/500px-Spiritual_Fire_Art_-_Kurenai.jpg',
         'property'=>[
             1=>3,
         ],
@@ -225,21 +225,22 @@ $config['cards'] = [
                 'section'=>'duration_dmg',
                 'value'=>'',
                 'turns'=>3,
+                'object'=>13,
                 'duration'=>[
                     [
                         'type'=>'dmg',
                         'value'=>11,
-                        'object'=>13
+                        'object'=>12
                     ]
                 ]
             ]
         ],
-        'is_object'=>1,
+        'is_object'=>0,
     ],
     13=>[
-        'name'=>'圣灵术',
+        'name'=>'水灵术',
         'desc'=>'3回合内，每回合在目标的结束阶段，回复目标10点生命值（资源：0/3/0，水，buff），覆盖：增加3点资源',
-        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1529307234&di=f88ece6c16e9330e77cc22835c9086c6&imgtype=jpg&er=1&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimgad%2Fpic%2Fitem%2F500fd9f9d72a605971fb25322334349b033bba2b.jpg',
+        'pic'=>'https://img.moegirl.org/common/thumb/7/78/Spiritual_Water_Art_-_Aoi.jpg/500px-Spiritual_Water_Art_-_Aoi.jpg',
         'property'=>[
             2=>3,
         ],
@@ -254,6 +255,37 @@ $config['cards'] = [
                         'type'=>'recover',
                         'value'=>10,
                         'object'=>13
+                    ]
+                ]
+            ]
+        ],
+        'resource'=>3,
+        'is_object'=>1,
+    ],
+    14=>[
+        'name'=>'风灵术',
+        'desc'=>'3回合内，每回合在目标的结束阶段，获得一张卡牌，并回复2点生命值（资源：0/1/2，风，buff）',
+        'pic'=>'http://photo.yupoo.com/xelover/4698be51217a/medish.jpg',
+        'property'=>[
+            2=>1,3=>2
+        ],
+        'effect'=>[
+            [
+                'type'=>'buff',
+                'section'=>'duration_draw_card',
+                'value'=>'',
+                'turns'=>3,
+                'duration'=>[
+                    [
+                        'type'=>'opcard',
+                        'method'=>'draw',
+                        'object'=>13,//表示自己
+                        'value'=>1
+                    ],
+                    [
+                        'type'=>'recover',
+                        'object'=>13,//表示自己
+                        'value'=>2
                     ]
                 ]
             ]
