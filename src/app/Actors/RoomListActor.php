@@ -26,14 +26,16 @@ class RoomListActor extends Actor{
         }
     }
 
-    public function createRoom($enter = 0,$user_id = ''){
+    public function createRoom($enter = 0,$user_id = '',$RoomActorName = ''){
         $time =  time();
-        $room_id = $time;
-        $RoomActorName = 'roomActorId'.$room_id;
+        if(empty($RoomActorName)){
+            $RoomActorName = 'roomActorId'.$time;
+        }
         try{
             Actor::create(RoomActor::class,$RoomActorName);
         }catch (\Exception $e){
             echo $e->getMessage();
+            return false;
         }
         $room_info['id'] = $RoomActorName;
         $room_info['create_time'] = $time;
@@ -107,11 +109,23 @@ class RoomListActor extends Actor{
     }
 
     /**
+     * 自己创建房间
+     *
+     */
+    public function createRoomByName($RoomActorName,$user_id){
+        //判断房间名是否存在
+        if(is_array($this->saveContext->getData()['room_list']) && array_key_exists($RoomActorName,$this->saveContext->getData()['room_list'])){
+            return false;
+        }
+        return $this->createRoom(1,$user_id,$RoomActorName);
+    }
+
+    /**
      * 推送消息给这个room使其创建用户
      * @param $RoomActorName
      * @throws
      */
-    private function subUserToRoom($RoomActorName,$user_id){
+    public function subUserToRoom($RoomActorName,$user_id){
         try{
            if(Actor::getRpc($RoomActorName)->joinRoomReply(['id'=>$user_id])){
                //房间列表统计人数+1
@@ -119,7 +133,10 @@ class RoomListActor extends Actor{
            }
         }catch (\Throwable $e){
             echo $e->getMessage();
+            return false;
         }
 
     }
+
+
 }

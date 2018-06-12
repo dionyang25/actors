@@ -42,18 +42,45 @@ class Action extends Controller
     }
 
     /**
+     * 创建房间
+     */
+    public function createRoom($room = ''){
+        if(empty($room)){
+            $this->send(['type' => '103', 'msg' => '房间名不能为空']);
+            return ;
+        }
+        $res = Actor::getRpc('roomList')->createRoom(1,$this->uid,$room);
+        if(!$res){
+            $this->send(['type' => '103', 'msg' => '创建失败']);
+            return ;
+        }
+    }
+
+    /**
      * 进入房间
      */
-    public function enterRoom()
+    public function enterRoom($room = '')
     {
 
         try{
-            //判断是否已在房间
+            var_dump($room);
+            //判断是否已在某个房间
             $RoomActorName = Actor::getRpc('roomList')->hasRoom($this->uid);
             if($RoomActorName){
                 $this->send(['type' => '103', 'msg' => '您已经在房间'.$RoomActorName.'里了']);
                 return ;
             }
+            //进入指定房间
+            if(!empty($room)){
+                $res = Actor::getRpc('roomList')->subUserToRoom($room,$this->uid);
+                if(!$res){
+                    $this->send(['type' => '103', 'msg' => '进入房间失败']);
+                    return ;
+                }
+                $this->send(['type' => '1001', 'msg' => '进入房间！房间号-'.$room,'params'=>['room_no'=>$room]]);
+                return ;
+            }
+            //快速进入房间
             //列表获取可用房间
             $RoomActorName = Actor::getRpc('roomList')->findAvailableRoom(1,$this->uid);
             if(!empty($RoomActorName)){

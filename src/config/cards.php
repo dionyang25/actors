@@ -102,7 +102,7 @@ $config['cards'] = [
     ],
     6=>[
         'name'=>'潮漩之歌',
-        'desc'=>'对对手造成23点水属性伤害，自己回复32点生命（资源：0/4/1，水）',
+        'desc'=>'对对手造成23点水属性伤害，自己回复30点生命（资源：0/4/1，水）',
         'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528967212&di=255fa3f82130cb69a967180d7f5a7df5&imgtype=jpg&er=1&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimgad%2Fpic%2Fitem%2F80cb39dbb6fd5266c10cc92fa018972bd40736e1.jpg',
         'property'=>[
             2=>4,3=>1
@@ -115,7 +115,7 @@ $config['cards'] = [
             ],
             [
                 'type'=>'recover',
-                'value'=>32,
+                'value'=>30,
                 'object'=>13
             ],
         ],
