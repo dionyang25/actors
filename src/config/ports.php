@@ -17,14 +17,14 @@ use Server\CoreBase\PortManager;
 //    'middlewares' => ['MonitorMiddleware']
 //];
 //
-//$config['ports'][] = [
-//    'socket_type' => PortManager::SOCK_HTTP,
-//    'socket_name' => '0.0.0.0',
-//    'socket_port' => 9092,
-//    'route_tool' => 'NormalRoute',
-//    'middlewares' => ['MonitorMiddleware', 'NormalHttpMiddleware'],
-//    'method_prefix' => 'http_'
-//];
+$config['ports'][] = [
+    'socket_type' => PortManager::SOCK_HTTP,
+    'socket_name' => '0.0.0.0',
+    'socket_port' => 9996,
+    'route_tool' => 'NormalRoute',
+    'middlewares' => ['MonitorMiddleware', 'NormalHttpMiddleware'],
+    'method_prefix' => 'http_'
+];
 
 $config['ports'][] = [
     'socket_type' => PortManager::SOCK_WS,
