@@ -34,9 +34,16 @@ class Action extends Controller
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function connect()
     {
-        $uid = Actor::getRpc('randomName')->getName();
+        if (empty($_SESSION['user'])){
+            return $this->send(['type' => '130','msg'=>'请先登录']);
+        }
+//        $uid = Actor::getRpc('randomName')->getName();
+        $uid = $_SESSION['user'];
         $this->bindUid($uid);
         $this->send(['type' => '9001','msg'=>'欢迎 '.$uid.' 连接服务器!','params'=>['uid'=>$uid]]);
     }
@@ -63,7 +70,6 @@ class Action extends Controller
     {
 
         try{
-            var_dump($room);
             //判断是否已在某个房间
             $RoomActorName = Actor::getRpc('roomList')->hasRoom($this->uid);
             if($RoomActorName){

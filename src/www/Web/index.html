@@ -3,68 +3,63 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>小蝌蚪</title>
-	<link rel="stylesheet" type="text/css" href="css/main.css" />
+	<title>首页</title>
+
 	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=0;" />
 	<meta name="apple-mobile-web-app-capable" content="YES">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black">
-	<meta name="title" content="小蝌蚪" />
-	<meta name="description" content="小蝌蚪" />
+	<!--<meta name="apple-mobile-web-app-status-bar-style" content="black">-->
+	<meta name="title" content="测试" />
+	<meta name="description" content="测试" />
+	<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
+
 <body>
-<canvas id="canvas"></canvas>
-
-<div id="ui">
-	<div id="fps"></div>
-
-	<input id="chat" type="text" />
-	<div id="chatText"></div>
-	<h1>小蝌蚪</h1>
-
-	<div id="instructions">
-		<h2>介绍</h2>
-		<p>空格打字聊天!<br />输入 name: XX 会设置昵称为XX</p>
-	</div>
-
-	<aside id="frogMode">
-		<h3>Frog Mode</h3>
-		<section id="tadpoles">
-			<h4>小蝌蚪</h4>
-			<ul id="tadpoleList">
-			</ul>
-		</section>
-		<section id="console">
-			<h4>Console</h4>
-		</section>
-	</aside>
-
-	<div id="cant-connect">
-		与服务器断开连接了
-	</div>
-</div>
-
-<script src="/js/lib/parseUri.js"></script>
-<script src="/js/lib/modernizr-1.5.min.js"></script>
-<script src="/js/jquery.min.js"></script>
-<script src="/js/lib/Stats.js"></script>
-
-<script src="/js/App.js"></script>
-<script src="/js/Model.js"></script>
-<script src="/js/Settings.js"></script>
-<script src="/js/Keys.js"></script>
-<script src="/js/WebSocketService.js"></script>
-<script src="/js/Camera.js"></script>
-
-<script src="/js/Tadpole.js"></script>
-<script src="/js/TadpoleTail.js"></script>
-
-<script src="/js/Message.js"></script>
-<script src="/js/WaterParticle.js"></script>
-<script src="/js/Arrow.js"></script>
-<script src="/js/formControls.js"></script>
-
-<script src="/js/Cookie.js"></script>
-<script src="/js/main.js"></script>
-
+	<form>
+		<div class="form-group">
+			<label for="username">用户名</label><input class="form-control" id="username" type="text" />
+		</div>
+		<div class="form-group">
+			<label for="password">密码</label>
+			<input type="password" class="form-control" id="password" placeholder="Password">
+		</div>
+		<button type="button" id="submitLogin" class="btn btn-default">登录</button>
+		<button type="button" id="submitRegister" class="btn btn-default">注册</button>
+	</form>
 </body>
+
+<script src="./js/jquery.min.js" ></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="./js/config.js"></script>
+<script>
+	$("#submitLogin").click(
+	    function () {
+			$.post('http://'+window.location.host+'/UserController/login',
+				{'username':$('#username').val(),'password':$("#password").val()}
+				,function (res) {
+			    if(res.error==0){
+                   window.location.href = '/game.html';
+				}else{
+			        alert('账号不存在或密码错误');
+				}
+            })
+        }
+	);
+
+    $("#submitRegister").click(
+        function () {
+            $.post('http://'+window.location.host+'/UserController/register',
+                {'username':$('#username').val(),'password':$("#password").val()}
+                ,function (res) {
+                    if(res.error==0){
+                        alert('注册成功')
+                    }else{
+                        alert('已经注册过');
+                    }
+                })
+        }
+    );
+</script>
 </html>
