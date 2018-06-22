@@ -52,8 +52,6 @@ class UserController extends BaseController {
             ->limit(1)->query()->row();
         }catch (\Exception $e){
             echo $e->getMessage();
-            echo $e->getFile();
-            echo $e->getLine();
             return $this->output(['error'=>-1]);
         }
         if(empty($res)){
