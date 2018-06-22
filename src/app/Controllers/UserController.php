@@ -39,6 +39,7 @@ class UserController extends BaseController {
      * @throws
      */
     public function http_login(){
+        var_dump($this->mysql_pool);
         $username = $this->http_input->post('username');
         $password = $this->http_input->post('password');
         if(empty($username) || empty($password)){
@@ -52,6 +53,9 @@ class UserController extends BaseController {
             ->limit(1)->query()->row();
         }catch (\Exception $e){
             echo $e->getMessage();
+            echo $e->getFile();
+            echo $e->getLine();
+            echo $e->getTraceAsString();
             return $this->output(['error'=>-1]);
         }
         if(empty($res)){
