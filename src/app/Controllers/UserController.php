@@ -10,7 +10,7 @@ namespace app\Controllers;
 class UserController extends BaseController {
     private $table = 'card_user';
     /**
-     * 注册
+     * 注册用户
      * @throws
      */
     public function http_register(){
