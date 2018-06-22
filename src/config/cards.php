@@ -265,7 +265,7 @@ $config['cards'] = [
     14=>[
         'name'=>'风灵术',
         'desc'=>'3回合内，每回合在目标的结束阶段，获得一张卡牌，并回复2点生命值（资源：0/1/2，风，buff）',
-        'pic'=>'http://photo.yupoo.com/xelover/4698be51217a/medish.jpg',
+        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1529672996754&di=706c9135b3bb3494c38f3f09687105fe&imgtype=0&src=http%3A%2F%2Fp4.qhmsg.com%2Ft01981e3cb8fbb45ee4.jpg',
         'property'=>[
             2=>1,3=>2
         ],

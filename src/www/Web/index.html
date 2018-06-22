@@ -50,8 +50,13 @@
 
     $("#submitRegister").click(
         function () {
+            let username = $('#username').val()
+			let password = $("#password").val()
+            if(!(username && password)){
+                alert('注册请填写用户名和密码')
+			}
             $.post('http://'+window.location.host+'/UserController/register',
-                {'username':$('#username').val(),'password':$("#password").val()}
+                {'username':username,'password':password}
                 ,function (res) {
                     if(res.error==0){
                         alert('注册成功')
