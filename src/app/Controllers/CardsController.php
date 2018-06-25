@@ -9,11 +9,14 @@
 namespace app\Controllers;
 
 
+use app\Models\CardsModel;
+
 class CardsController extends BaseController
 {
     private $table = 'card_cards';
     /**
      * 导入卡
+     * @throws
      */
     public function http_import(){
         $cards = $this->config->get('cards');
@@ -24,6 +27,7 @@ class CardsController extends BaseController
             foreach ($vo['property'] as $key=>$val){
                 $vo['property_'.$key] = $val;
                 if($val > $max_val){
+                    $max_val = $val;
                     $max_key = $key;
                 }
             }
@@ -37,6 +41,7 @@ class CardsController extends BaseController
                 )->query();
             }catch(\Exception $e){
                 echo $e->getMessage();
+                continue;
             }
 
         }
@@ -46,19 +51,29 @@ class CardsController extends BaseController
     /**
      * 导出卡到yac
      */
-    public function export(){
+    public function http_export(){
         //取list
         $list = $this->mysql_pool->dbQueryBuilder->select('*')->from($this->table)->query();
+        $list = $list['result'];
         foreach ($list as &$vo){
             $vo['effect'] = json_decode($vo['effect']);
             $vo['desc'] = $vo['description'];
             $vo['property'][1] = $vo['property_1'];
             $vo['property'][2] = $vo['property_2'];
             $vo['property'][3] = $vo['property_3'];
-            unset($vo['property_1'],$vo['property_2'],$vo['property_3'],$vo['description']);
+            unset($vo['property_1'],$vo['property_2'],$vo['property_3'],$vo['description'],$vo['serial_no']);
         }
-        //导入到yac
-
+        //导入到redis
+        $this->redis_pool->getCoroutine()->set('cards_info',json_encode($list));
         
+    }
+
+    /**
+     * 读取全卡
+     */
+    public function http_loadCards(){
+        //取list
+        $ret = $this->loader->model(CardsModel::class,$this)->loadCards();
+        $this->output($ret);
     }
 }

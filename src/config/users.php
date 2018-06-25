@@ -29,7 +29,8 @@ $config['users']['buff'] =[
     'cover'=>'资源加速',
     'duration_dmg'=>'持续伤害',
     'duration_recover'=>'持续回复',
-    'duration_draw_card'=>'持续抽卡',
+    'duration_draw_card'=>'持续抽牌',
+    'restrict_draw'=>'无法出牌',
 ];
 
 $config['users']['card'] =[

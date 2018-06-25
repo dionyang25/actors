@@ -7,6 +7,7 @@
  */
 namespace app\Actors;
 
+use app\Models\CardsModel;
 use Server\CoreBase\Actor;
 
 class CardListActor extends Actor{
@@ -24,7 +25,7 @@ class CardListActor extends Actor{
      * @throws \Server\Asyn\MQTT\Exception
      */
     public function addNewCard($num = 1,$random = 1,$is_pub_user_info = 1,$is_pub_card_info = 1){
-        $card_list = $this->config->get('cards');
+        $card_list = $this->loader->model(CardsModel::class,$this)->loadCards();
         //随机取卡
         if($random){
             for($i=1;$i<=$num;$i++){
@@ -50,13 +51,43 @@ class CardListActor extends Actor{
         if($is_pub_card_info){
             //卡牌列表-发布卡牌信息
             $this->pubCardInfo();
-            $msg = '玩家'.$this->saveContext->getData()['user_info']['uid'].'抽了'.$num.'张卡！';
+            $msg = '玩家'.$this->saveContext->getData()['user_info']['uid'].'丢弃'.$num.'张牌！';
             //卡牌列表-发布抽卡信息
             Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubMsg('2010',$msg);
         }
 
     }
 
+    /**
+     * 丢弃卡牌
+     * @throws
+     */
+    public function discardCards($num = 1,$is_pub_user_info = 1,$is_pub_card_info = 1){
+        for($i = 0;$i<$num;++$i){
+            if(empty($this->saveContext->getData()['list'])){
+                break;
+            }
+            $key = array_rand($this->saveContext->getData()['list']);
+            unset($this->saveContext->getData()['list'][$key]);
+        }
+        //减掉卡牌数
+        $game_info = Actor::getRpc($this->saveContext->getData()['user_info']['player'])->gameInfo();
+        $game_info['card_num'] -=$i;
+        Actor::getRpc($this->saveContext->getData()['user_info']['player'])->changeGameInfo($game_info);
+        $this->saveContext->save();
+        if($is_pub_user_info){
+            //房间-发布用户信息
+            Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubGameInfo();
+        }
+        if($is_pub_card_info){
+            //卡牌列表-发布卡牌信息
+            $this->pubCardInfo();
+            $msg = '玩家'.$this->saveContext->getData()['user_info']['uid'].'丢弃'.$i.'张牌！';
+            //卡牌列表-发布抽卡信息
+            Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubMsg('2010',$msg);
+        }
+//        $this->saveContext->getData()['list']
+    }
 
     /**
      * 打出卡牌
@@ -71,8 +102,15 @@ class CardListActor extends Actor{
         if(!isset($deck[$card_order])){
             return ['res'=>false,'msg'=>'卡组中不存在此卡'];
         }
+        //判断是否有打出禁止
+        $game_info = Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->gameInfo();
+        if(!empty($game_info['buff']['restrict_draw'])){
+            Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->pubMsg('2010','由于打出限制，无法出牌');
+            return ['res'=>false,'msg'=>'无法打出卡牌'];
+        }
+
         //获取该卡属性
-        $card_list = $this->config->get('cards');
+        $card_list = $this->loader->model(CardsModel::class,$this)->loadCards();
         $card_desc = $card_list[$deck[$card_order]];
         //资源校验，直接返回扣除后的数据
         if(!Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->checkCardResource($card_desc)){
@@ -152,7 +190,7 @@ class CardListActor extends Actor{
             return ['res'=>false,'msg'=>'卡组中不存在此卡'];
         }
         //获取该卡属性
-        $card_list = $this->config->get('cards');
+        $card_list = $this->loader->model(CardsModel::class,$this)->loadCards();
         $card_desc = $card_list[$deck[$card_order]];
         //增加对应资源
         $resource_config = $this->config->get('users.resource');
@@ -187,7 +225,7 @@ class CardListActor extends Actor{
     //返回所有卡的属性
     public function fetchList(){
         $list = $this->saveContext->getData()['list'];
-        $card_list = $this->config->get('cards');
+        $card_list = $this->loader->model(CardsModel::class,$this)->loadCards();
         $ret = [];
         foreach ($list as $key =>$vo){
            $ret[] = [
