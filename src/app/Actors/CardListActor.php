@@ -51,7 +51,7 @@ class CardListActor extends Actor{
         if($is_pub_card_info){
             //卡牌列表-发布卡牌信息
             $this->pubCardInfo();
-            $msg = '玩家'.$this->saveContext->getData()['user_info']['uid'].'丢弃'.$num.'张牌！';
+            $msg = '玩家'.$this->saveContext->getData()['user_info']['uid'].'抽取'.$num.'张牌！';
             //卡牌列表-发布抽卡信息
             Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubMsg('2010',$msg);
         }
