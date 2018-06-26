@@ -20,7 +20,7 @@ class CardsController extends BaseController
      */
     public function http_import(){
         $cards = $this->config->get('cards');
-        foreach ($cards as $key1=>$vo){
+        foreach ($cards as $vo){
             $vo['effect'] = json_encode($vo['effect']);
             $max_val = 0;
             $max_key = 0;
@@ -33,7 +33,6 @@ class CardsController extends BaseController
             }
             $vo['property_main'] = $max_key;
             $vo['description'] = $vo['desc'];
-            $vo['serial_no'] = $key1;
             unset($vo['property'],$vo['desc']);
             try{
                 $this->mysql_pool->dbQueryBuilder->insert($this->table)->set(
@@ -50,12 +49,17 @@ class CardsController extends BaseController
 
     /**
      * 导出卡到yac
+     * @throws
      */
     public function http_export(){
-        //取list
+        //取全卡list
         $list = $this->mysql_pool->dbQueryBuilder->select('*')->from($this->table)->query();
         $list = $list['result'];
-        foreach ($list as &$vo){
+        //存全卡
+        $all = [];
+        //只存可获得的卡
+        $avail = [];
+        foreach ($list as $vo){
             $vo['effect'] = json_decode($vo['effect']);
             $vo['desc'] = $vo['description'];
             $vo['property'][1] = $vo['property_1'];
@@ -63,11 +67,16 @@ class CardsController extends BaseController
             $vo['property'][3] = $vo['property_3'];
             $vo['is_object'] = (int)$vo['is_object'];
             unset($vo['property_1'],$vo['property_2'],$vo['property_3'],
-                $vo['description'],$vo['serial_no'],$vo['id']);
+                $vo['description']);
+            $all[$vo['id']] = $vo;
+            if((int)$vo['card_status'] == 1){
+                $avail[$vo['id']] = $vo;
+            }
         }
         //导入到redis
-        $this->redis_pool->getCoroutine()->set('cards_info',json_encode($list));
-        
+        $this->redis_pool->getCoroutine()->set('cards_info',json_encode($all));
+        $this->redis_pool->getCoroutine()->set('cards_avail',json_encode($avail));
+
     }
 
     /**

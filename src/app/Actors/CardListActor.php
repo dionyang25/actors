@@ -25,7 +25,7 @@ class CardListActor extends Actor{
      * @throws \Server\Asyn\MQTT\Exception
      */
     public function addNewCard($num = 1,$random = 1,$is_pub_user_info = 1,$is_pub_card_info = 1){
-        $card_list = $this->loader->model(CardsModel::class,$this)->loadCards();
+        $card_list = $this->loader->model(CardsModel::class,$this)->loadCards(1);
         //随机取卡
         if($random){
             for($i=1;$i<=$num;$i++){

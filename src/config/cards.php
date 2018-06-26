@@ -293,73 +293,280 @@ $config['cards'] = [
 //        'resource'=>3,
 //        'is_object'=>1,
 //    ],
-    15=>[
-        'name'=>'怒涛之舞踏',
-        'desc'=>'对对手造成40点伤害，对手3回合之内无法覆盖卡牌（资源：1/6/1，水，buff）',
-        'pic'=>'https://img.moegirl.org/common/3/3c/Waterw.jpg',
+//    15=>[
+//        'name'=>'怒涛之舞踏',
+//        'desc'=>'对对手造成40点伤害，对手3回合之内无法覆盖卡牌（资源：1/6/1，水，buff）',
+//        'pic'=>'https://img.moegirl.org/common/3/3c/Waterw.jpg',
+//        'property'=>[
+//            1=>1
+//        ],
+//        'effect'=>[
+//            [
+//                'type'=>'dmg',
+//                'value'=>40,
+//                'object'=>12//对手
+//            ],
+//            [
+//                'type'=>'buff',
+//                'section'=>'is_cover',
+//                'value'=>'',
+//                'turns'=>3,
+//                'object'=>12
+//            ]
+//        ],
+//        'is_object'=>0,
+//    ],
+//    16=>[
+//        'name'=>'龙卷之赞歌',
+//        'desc'=>'对对手造成40点伤害，对手随机丢弃两张卡牌（资源：1/1/6，风）',
+//        'pic'=>'https://img.moegirl.org/common/thumb/c/cd/Twister.jpg/500px-Twister.jpg',
+//        'property'=>[
+//            1=>1
+//        ],
+//        'effect'=>[
+//            [
+//                'type'=>'dmg',
+//                'value'=>40,
+//                'object'=>12//对手
+//            ],
+//            [
+//                'type'=>'opcard',
+//                'method'=>'discard',
+//                'object'=>12,
+//                'value'=>2
+//            ]
+//        ],
+//        'is_object'=>0,
+//    ],
+//    17=>[
+//        'name'=>'红莲之颂咏',
+//        'desc'=>'对对手造成45点伤害，对手3回合之内无法打出卡牌（资源：6/1/1，火，buff）',
+//        'pic'=>'https://img.moegirl.org/common/thumb/6/60/Crimson_Fire.jpg/500px-Crimson_Fire.jpg',
+//        'property'=>[
+//            1=>1
+//        ],
+//        'effect'=>[
+//            [
+//                'type'=>'dmg',
+//                'value'=>45,
+//                'object'=>12
+//            ],
+//            [
+//                'type'=>'buff',
+//                'section'=>'restrict_draw',
+//                'value'=>'',
+//                'turns'=>3,
+//                'object'=>12
+//            ]
+//        ],
+//        'is_object'=>0,
+//    ]
+    18=>[
+        'name'=>'火球-Lv2',
+        'desc'=>'打出火球，造成22点火属性伤害，（资源：1/0/0，火）',
+        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1527585838480&di=34ed5d095fb230468395d861a51304a1&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F11%2F31%2F09%2F35J58PICZRd.jpg',
         'property'=>[
             1=>1
         ],
         'effect'=>[
             [
                 'type'=>'dmg',
-                'value'=>40,
-                'object'=>12//对手
+                'value'=>22,
+            ]
+        ],
+        'is_object'=>1,
+        'card_status'=>0
+    ],
+    19=>[
+        'name'=>'火球-Lv3',
+        'desc'=>'打出火球，造成22点火属性伤害，并且3回合内，每回合在自己的结束阶段，对对手造成4点火属性伤害（资源：1/0/0，火, buff）',
+        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1527585838480&di=34ed5d095fb230468395d861a51304a1&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F11%2F31%2F09%2F35J58PICZRd.jpg',
+        'property'=>[
+            1=>1
+        ],
+        'effect'=>[
+            [
+                'type'=>'dmg',
+                'value'=>22,
             ],
             [
                 'type'=>'buff',
-                'section'=>'is_cover',
+                'section'=>'duration_dmg',
                 'value'=>'',
                 'turns'=>3,
-                'object'=>12
+                'object'=>13,
+                'duration'=>[
+                    [
+                        'type'=>'dmg',
+                        'value'=>4,
+                        'object'=>12
+                    ]
+                ]
             ]
         ],
-        'is_object'=>0,
+        'is_object'=>1,
+        'card_status'=>0
     ],
-    16=>[
-        'name'=>'龙卷之赞歌',
-        'desc'=>'对对手造成40点伤害，对手随机丢弃两张卡牌（资源：1/1/6，风）',
-        'pic'=>'https://img.moegirl.org/common/thumb/c/cd/Twister.jpg/500px-Twister.jpg',
+    20=>[
+        'name'=>'水之矢-Lv2',
+        'desc'=>'打出水之箭，对对手造成12点水属性伤害，回复自身12点生命值（资源：0/1/0，水）',
+        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1527585796422&di=ecb0fe795f56bc509f73aeafc27d0836&imgtype=jpg&src=http%3A%2F%2Fimg2.imgtn.bdimg.com%2Fit%2Fu%3D3590960182%2C1982815395%26fm%3D214%26gp%3D0.jpg',
         'property'=>[
-            1=>1
+            2=>1
         ],
         'effect'=>[
             [
                 'type'=>'dmg',
-                'value'=>40,
-                'object'=>12//对手
+                'value'=>12,
+                'object'=>12
+            ],
+            [
+                'type'=>'recover',
+                'value'=>12,
+                'object'=>13
+            ]
+        ],
+        'is_object'=>0,
+        'card_status'=>0
+    ],
+    21=>[
+        'name'=>'水之矢-Lv3',
+        'desc'=>'打出水之箭，对对手造成14点水属性伤害，并且3回合内，每回合在自己的结束阶段，回复自身8点生命值（资源：0/1/0，水，buff）',
+        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1527585796422&di=ecb0fe795f56bc509f73aeafc27d0836&imgtype=jpg&src=http%3A%2F%2Fimg2.imgtn.bdimg.com%2Fit%2Fu%3D3590960182%2C1982815395%26fm%3D214%26gp%3D0.jpg',
+        'property'=>[
+            2=>1
+        ],
+        'effect'=>[
+            [
+                'type'=>'dmg',
+                'value'=>14,
+                'object'=>12
+            ],
+            [
+                'type'=>'buff',
+                'section'=>'duration_recover',
+                'value'=>'',
+                'turns'=>3,
+                'duration'=>[
+                    [
+                        'type'=>'recover',
+                        'value'=>8,
+                        'object'=>13
+                    ]
+                ]
+            ]
+
+        ],
+        'is_object'=>0,
+        'card_status'=>0
+    ],
+    22=>[
+        'name'=>'风之刃-Lv2',
+        'desc'=>'打出风刃，造成10点风属性伤害，自身抽1张卡（资源：0/0/1，风）',
+        'pic'=>'https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1528272881&di=bb0f73ae3d6ba21b0a1cd808c23edbb4&src=http://images.17173.com/2012/news/2012/06/28/gxy0628cm02s.jpg',
+        'property'=>[
+            3=>1
+        ],
+        'effect'=>[
+            [
+                'type'=>'dmg',
+                'value'=>10
+            ],
+            [
+                'type'=>'opcard',
+                'method'=>'draw',
+                'object'=>13,//表示自己
+                'value'=>1
+            ]
+        ],
+        'is_object'=>1,
+        'card_status'=>0
+    ],
+    23=>[
+        'name'=>'风之刃-Lv3',
+        'desc'=>'打出风刃，造成6点风属性伤害，自身抽1张卡，对手随机弃1张卡（资源：0/0/1，风）',
+        'pic'=>'https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1528272881&di=bb0f73ae3d6ba21b0a1cd808c23edbb4&src=http://images.17173.com/2012/news/2012/06/28/gxy0628cm02s.jpg',
+        'property'=>[
+            3=>1
+        ],
+        'effect'=>[
+            [
+                'type'=>'dmg',
+                'value'=>6
+            ],
+            [
+                'type'=>'opcard',
+                'method'=>'draw',
+                'object'=>13,//表示自己
+                'value'=>1
             ],
             [
                 'type'=>'opcard',
                 'method'=>'discard',
                 'object'=>12,
-                'value'=>2
+                'value'=>1
             ]
         ],
-        'is_object'=>0,
+        'is_object'=>1,
+        'card_status'=>0
     ],
-    17=>[
-        'name'=>'红莲之颂咏',
-        'desc'=>'对对手造成45点伤害，对手3回合之内无法打出卡牌（资源：6/1/1，火，buff）',
-        'pic'=>'https://img.moegirl.org/common/thumb/6/60/Crimson_Fire.jpg/500px-Crimson_Fire.jpg',
+    24=>[
+        'name'=>'等级提升-绿',
+        'desc'=>'使手牌中所有带-Lv的手牌，等级提升1级（资源：0/0/2，风），覆盖：增加3点资源',
+        'pic'=>'https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1528272881&di=bb0f73ae3d6ba21b0a1cd808c23edbb4&src=http://images.17173.com/2012/news/2012/06/28/gxy0628cm02s.jpg',
         'property'=>[
-            1=>1
+            3=>2
         ],
         'effect'=>[
             [
-                'type'=>'dmg',
-                'value'=>45,
-                'object'=>12
-            ],
+                'type'=>'level',
+                'method'=>'up',
+                'card'=>'all',
+                'object'=>13,//表示自己
+                'value'=>1
+            ]
+        ],
+        'is_object'=>1,
+        'resource'=>3
+    ],
+    25=>[
+        'name'=>'等级提升-红',
+        'desc'=>'使手牌中所有带-Lv的手牌，等级提升1级（资源：2/0/0，火)，覆盖：增加3点资源',
+        'pic'=>'https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1528272881&di=bb0f73ae3d6ba21b0a1cd808c23edbb4&src=http://images.17173.com/2012/news/2012/06/28/gxy0628cm02s.jpg',
+        'property'=>[
+            1=>2
+        ],
+        'effect'=>[
+
             [
-                'type'=>'buff',
-                'section'=>'restrict_draw',
-                'value'=>'',
-                'turns'=>3,
-                'object'=>12
+                'type'=>'level',
+                'method'=>'up',
+                'card'=>'all',
+                'object'=>13,//表示自己
+                'value'=>1
             ]
         ],
         'is_object'=>0,
-    ]
+        'resource'=>3
+    ],
+    26=>[
+        'name'=>'等级提升-蓝',
+        'desc'=>'使手牌中所有带-Lv的手牌，等级提升1级（资源：0/2/0，水），覆盖：增加3点资源',
+        'pic'=>'https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1528272881&di=bb0f73ae3d6ba21b0a1cd808c23edbb4&src=http://images.17173.com/2012/news/2012/06/28/gxy0628cm02s.jpg',
+        'property'=>[
+            2=>2
+        ],
+        'effect'=>[
+            [
+                'type'=>'level',
+                'method'=>'up',
+                'card'=>'all',
+                'object'=>13,//表示自己
+                'value'=>1
+            ]
+        ],
+        'is_object'=>0,
+        'resource'=>3
+    ],
 ];
 return $config;

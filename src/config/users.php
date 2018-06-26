@@ -30,10 +30,18 @@ $config['users']['buff'] =[
     'duration_dmg'=>'持续伤害',
     'duration_recover'=>'持续回复',
     'duration_draw_card'=>'持续抽牌',
-    'restrict_draw'=>'无法出牌',
+    'restrict_draw'=>'冻结',
 ];
 
 $config['users']['card'] =[
     'limit' =>10
+];
+
+$config['users']['level_up'] = [
+    16=>40,
+    17=>38,
+
+    38=>39,
+    40=>41
 ];
 return $config;

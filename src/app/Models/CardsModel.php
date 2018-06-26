@@ -13,11 +13,19 @@ use Server\CoreBase\Model;
 
 class CardsModel extends Model
 {
-    public function loadCards(){
+    /**
+     * @param int $avail 只取可用的卡
+     * @return mixed
+     */
+    public function loadCards($avail = 0){
         //测试
 //        return $this->config->get('cards');
         //正式
-        $info = $this->redis_pool->getCoroutine()->get('cards_info');
+        if($avail){
+            $info = $this->redis_pool->getCoroutine()->get('cards_avail');
+        }else{
+            $info = $this->redis_pool->getCoroutine()->get('cards_info');
+        }
         if(empty($info)){
             $info = [];
         }
