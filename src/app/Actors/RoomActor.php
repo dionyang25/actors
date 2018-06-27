@@ -251,7 +251,7 @@ class RoomActor extends Actor{
 
             }
         }
-        //回合开始时，判断持续性光环
+        //回合结束时，判断持续性光环
         try{
             Actor::create(BuffActor::class,'buff');
         }catch (\Exception $e){

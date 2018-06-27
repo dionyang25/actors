@@ -40,8 +40,9 @@ $config['users']['card'] =[
 $config['users']['level_up'] = [
     16=>40,
     17=>38,
-
+    18=>42,
     38=>39,
-    40=>41
+    40=>41,
+    42=>43
 ];
 return $config;

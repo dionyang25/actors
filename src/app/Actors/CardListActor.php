@@ -103,9 +103,7 @@ class CardListActor extends Actor{
             return ['res'=>false,'msg'=>'卡组中不存在此卡'];
         }
         //判断是否有打出禁止
-        $game_info = Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->gameInfo();
-        if(!empty($game_info['buff']['restrict_draw'])){
-            Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->pubMsg('2010','由于打出限制，无法出牌');
+        if(!$this->judgeDraw()){
             return ['res'=>false,'msg'=>'无法打出卡牌'];
         }
 
@@ -237,6 +235,30 @@ class CardListActor extends Actor{
         return $ret;
     }
 
+
+
+    /**
+     * 升级卡牌 或者类卡牌转换逻辑
+     * @param null $card_order
+     * @throws
+     */
+    public function upgrade($card_order = null){
+        if(!is_null($card_order)){
+
+        }
+        //获取升级配置
+        $level_up = $this->config->get('users.level_up');
+        //升级！
+        foreach ($this->saveContext->getData()['list'] as &$vo){
+            if(array_key_exists($vo,$level_up)){
+                $vo = $level_up[$vo];
+            }
+        }
+        //发布
+//        $this->pubCardInfo();
+        $this->saveContext->save();
+    }
+
     /**
      * 发布卡牌信息
      * @throws \Server\Asyn\MQTT\Exception
@@ -275,6 +297,19 @@ class CardListActor extends Actor{
                 break;
         }
         return $object;
+    }
+
+    /**
+     * 卡牌打出时的判定
+     */
+    protected function judgeDraw(){
+        $game_info = Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->gameInfo();
+        //无法打出卡牌
+        if(!empty($game_info['buff']['restrict_draw'])){
+            Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->pubMsg('2010','由于打出限制，无法出牌');
+           return false;
+        }
+        return true;
     }
 
     function registStatusHandle($key, $value)

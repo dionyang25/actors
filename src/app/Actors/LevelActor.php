@@ -18,7 +18,7 @@ class LevelActor extends Actor
      * @param $effect
      * @param $origin_uid
      * @param null $object
-     * @return bool
+     * @return
      *  [
             'type'=>'level',
             'method'=>'up',
@@ -29,18 +29,15 @@ class LevelActor extends Actor
      *
      */
     public function dealEffect($effect,$origin_uid,$object = null){
+        $msg = '';
         switch($effect['method']){
             case 'up':
-
+                //先只有升级全部卡牌的逻辑
+                Actor::getRpc('cardList-'.$origin_uid)->upgrade($origin_uid);
+                $msg .= sprintf('%s 手中卡牌的等级提升了！',$origin_uid);
                 break;
         }
-    }
-
-    /**
-     * 升级所有卡牌
-     */
-    public function levelUpAll(){
-
+        return ['msg'=>$msg];
     }
 
     function registStatusHandle($key, $value)
