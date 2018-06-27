@@ -24,7 +24,8 @@
         <button id="roomList" type="button" class="btn btn-default">房间列表</button>
         <button id="exitRoom" type="button" class="btn btn-default">退出房间</button>
         <button id="exitLogin" type="button" class="btn btn-info">退出/登录</button>
-        <button id="startGame" type="button" class="btn btn-default" style="display: none">开始游戏</button>
+        <button id="startGame" type="button" class="btn btn-success" style="display: none">开始游戏</button>
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#rulesModal">游戏规则</button>
     </div>
 </div>
 
@@ -84,6 +85,24 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button type="button" id="enterRoomButton" class="btn btn-primary" data-dismiss="modal">加入</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="rulesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" >游戏规则</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
     </div>
@@ -258,6 +277,15 @@
         console.log(card_data)
         ws.send(JSON.stringify(card_data))
     });
+
+    //请求规则
+    $.get('http://'+window.location.host+'/UserController/rules',
+        {}
+        ,function (res) {
+            if(res.data) {
+                $('#rulesModal .modal-body').html(res.data)
+            }
+        })
 
 </script>
 <script id="roomListTable" type="text/html">

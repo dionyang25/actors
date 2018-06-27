@@ -63,6 +63,12 @@ class UserController extends BaseController {
     }
 
     /**
+     * 输出规则
+     */
+    public function http_rules(){
+        return $this->output(['data'=>$this->config->get('games.rules')]);
+    }
+    /**
      * 登出
      * @throws
      */
