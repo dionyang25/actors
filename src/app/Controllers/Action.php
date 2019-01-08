@@ -208,8 +208,8 @@ class Action extends Controller
 
     public function onClose()
     {
-        $this->exitRoom();
-        $this->destroy();
+//        $this->exitRoom();
+//        $this->destroy();
     }
 
     private function getRandomName(){
