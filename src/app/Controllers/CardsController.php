@@ -59,6 +59,7 @@ class CardsController extends BaseController
         $all = [];
         //只存可获得的卡
         $avail = [];
+        $property_main = [1=>'🔥',2=>'💧',3=>'☁️'];
         foreach ($list as $vo){
             $vo['effect'] = json_decode($vo['effect']);
             $vo['desc'] = $vo['description'];
@@ -66,6 +67,7 @@ class CardsController extends BaseController
             $vo['property'][2] = $vo['property_2'];
             $vo['property'][3] = $vo['property_3'];
             $vo['is_object'] = (int)$vo['is_object'];
+            $vo['name'] = $property_main[$vo['property_main']].$vo['name'];
             unset($vo['property_1'],$vo['property_2'],$vo['property_3'],
                 $vo['description']);
             $all[$vo['id']] = $vo;
