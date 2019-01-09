@@ -30,18 +30,18 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4 bg-danger">
-        <div class="row">
-            <div class="col-md-12 bg-info"><h4>玩家信息(<span id="is_turn_player"></span><span id="uid"></span>)</h4></div>
-            <div class="col-md-12 bg-info"><div id="userFrame"></div></div>
-            <div class="col-md-12 bg-danger"><h4>消息（回合：<span id="turn"></span>）</h4></div>
-            <div class="col-md-12 bg-danger"><div id="battleFrame" style="height:150px; overflow:auto"></div></div>
+    <div class="col-md- bg-danger">
+        <div class="row"style="padding-left:20px">
+            <div class="col-md-12 col-xs-6 col-sm-6 bg-info">
+                <div id="userFrame" lang=""></div>
+            </div>
+            <div class="col-md-12 col-xs-6 col-sm-6 bg-danger"><h4>消息（回合：<span id="turn"></span>）</h4><div id="battleFrame" style="height:150px; overflow:auto"></div></div>
         </div>
     </div>
     <div class="col-md-5">
         <div class="row">
             <div class="col-md-12 bg-warning"><h4>卡牌区 <span id="cardPic"></span> </h4></div>
-            <div class="col-md-12 bg-warning"><div id="cardFrame" style="height:250px;overflow:auto;"></div></div>
+            <div class="col-md-12 bg-warning"><div id="cardFrame" style="height:300px;overflow:auto;"></div></div>
         </div>
     </div>
     <div class="col-md-3">
@@ -157,7 +157,7 @@
                 //游戏用户信息
                 list_output = Mustache.render($("#userInfoTable").html(),evtData.params);
                 $('#userFrame').html(list_output);
-                $(".show_"+$("#uid").html()).css('color','blue')
+                $(".show_"+$("#userFrame").attr('lang')).css('color','red')
                 break;
             case '2002':
                 //卡牌信息
@@ -190,7 +190,7 @@
                 break;
             case '9001':
                 fMsg(evtData.msg);
-                $("#uid").html(evtData.params.uid);
+                $("#userFrame").attr('lang',evtData.params.uid);
                 break;
             default:
                 fMsg(evtData.msg);
@@ -295,16 +295,24 @@
     </table>
 </script>
 <script id="userInfoTable" type="text/html">
-    <table class="table table-bordered">
-        <tr><th>用户</th><th>生命</th><th>卡牌数</th><th>资源（火/水/风）</th><th>光环</th></tr>
-        {{#game_info}}
-        <tr class="show_{{uid}}">
-            <td>{{uid}}</td><td>{{info.hp}}</td><td>{{info.card_num}}</td>
-            <td>{{info.resource.1}}/{{info.resource.2}}/{{info.resource.3}}</td>
-            <td>{{#info.buff}}{{name}}{{value}}({{turns}}) {{/info.buff}}</td>
-        </tr>
-        {{/game_info}}
-    </table>
+    {{#game_info}}
+    <div class="show_{{uid}}">
+        <div><span id="is_turn_player"></span><span class="show_{{uid}}">{{uid}}</span></div>
+            hp:<progress value="{{info.hp}}" max="150"></progress> {{info.hp}}/150
+            <div>🔥{{info.resource.1}} 💧{{info.resource.2}} ☁️{{info.resource.3}} ⌚️{{info.card_num}}</div>
+            <div>👼 {{#info.buff}}{{name}}{{value}}({{turns}}){{/info.buff}}</div>
+    </div>
+    {{/game_info}}
+    <!--<table class="table table-bordered">-->
+        <!--<tr><th>用户</th><th>生命</th><th>卡牌数</th><th>资源（火/水/风）</th><th>光环</th></tr>-->
+
+        <!--<tr class="show_{{uid}}">-->
+            <!--<td>{{uid}}</td><td>{{info.hp}}</td><td>{{info.card_num}}</td>-->
+            <!--<td>{{info.resource.1}}/{{info.resource.2}}/{{info.resource.3}}</td>-->
+            <!--<td>{{#info.buff}}{{name}}{{value}}({{turns}}) {{/info.buff}}</td>-->
+        <!--</tr>-->
+
+    <!--</table>-->
 </script>
 <script id="cardPicList" type="text/html">
     {{#card_info}}<img src="{{card_desc.pic}}" style="width:30px;height:30px;margin-right: 10px" />{{/card_info}}
