@@ -206,13 +206,54 @@ class Action extends Controller
         }
     }
 
+    /**
+     * 断线重连
+     */
+    public function reconnect(){
+        try{
+            //找roomActor
+            $RoomActorName = Actor::getRpc('roomList')->hasRoom($this->uid);
+            var_dump('$RoomActorName',$RoomActorName);
+            if (!$RoomActorName) {
+                $this->send(['type' => '104', 'msg' => '您不在房间内']);
+                return;
+            }
+            //订阅房间消息
+            get_instance()->addSub('Room/'.$RoomActorName,$this->uid);
+            //订阅房间消息
+            get_instance()->addSub('Player/Player-'.$this->uid,$this->uid);
+            //发布房间信息
+            Actor::getRpc($RoomActorName)->pubGameInfo();
+            //发布回合信息
+            Actor::getRpc($RoomActorName)->pubTurnInfo();
+            try{
+                $card_list_name = 'cardList-'.$this->uid;
+                //发布卡牌信息
+                Actor::getRpc($card_list_name)->pubCardInfo();
+            }catch (\Exception $e){
+                echo $e->getMessage();
+            }
+        }catch (\Exception $e){
+
+        }
+    }
+
+    public function logout(){
+        $this->exitRoom();
+        $_SESSION['user'] = null;
+        $this->destroy();
+    }
+
+
     public function onClose()
     {
         //支持断线重连
 
-        $this->exitRoom();
-        $this->destroy();
+//        $this->exitRoom();
+//        $this->destroy();
     }
+
+
 
     private function getRandomName(){
 

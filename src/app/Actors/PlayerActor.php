@@ -117,15 +117,4 @@ class PlayerActor extends Actor{
         }
         return false;
     }
-
-    /**
-     * 断线重连
-     */
-    public function backToGame(){
-        //查询用户信息
-
-        //发布玩家信息
-
-        //发布卡牌信息
-    }
 }

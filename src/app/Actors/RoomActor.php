@@ -52,7 +52,7 @@ class RoomActor extends Actor{
         $this->saveContext->getData()['user_list'][$user_id] = 1;
         $this->saveContext->save();
         //订阅房间消息
-        get_instance()->addSub('Room/'.$this->name,$user_id);
+        get_instance()->addSub('Player/'.$this->name,$user_id);
         $data = [
             'type'=>'1002',
             'msg'=>'系统消息：欢迎'.$user_id.'进入房间'
@@ -303,6 +303,23 @@ class RoomActor extends Actor{
             ];
         }
         return $res;
+    }
+
+    /**
+     * 发布回合信息
+     * @param $key
+     * @param $value
+     * @return bool
+     */
+    public function pubTurnInfo(){
+        $turn_uid = $this->saveContext->getData()['game_info']['turn_player'];
+        //循环发布回合信息
+        foreach (array_keys($this->saveContext->getData()['user_list']) as $uid){
+            $is_turn_player = ($turn_uid == $uid)?1:0;
+            //发布信息
+            Actor::getRpc('Player-'.$uid)->pubMsg('2011','玩家'.$turn_uid.'回合开始！',
+                ['turn'=>$this->saveContext->getData()['game_info']['turn'],'is_turn_player'=>$is_turn_player]);
+        }
     }
 
     function registStatusHandle($key, $value)

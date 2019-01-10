@@ -26,6 +26,7 @@
         <button id="exitRoom" type="button" class="btn btn-default">退出房间</button>
         <button id="exitLogin" type="button" class="btn btn-info">退出/登录</button>
         <button id="startGame" type="button" class="btn btn-success" style="display: none">开始游戏</button>
+        <button id="reconnect" type="button" class="btn btn-info">断线重连</button>
         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#rulesModal">游戏规则</button>
     </div>
 </div>
@@ -143,6 +144,7 @@
                 fMsg(evtData.msg);
                 $("#startGame").hide();
                 break;
+                //进入房间
             case '1002':
                 evtData.msg = '<div style="color:#e47c6c">'+evtData.msg+'</div>';
                 fMsg(evtData.msg);
@@ -157,6 +159,7 @@
             case '2001':
                 //游戏用户信息
                 list_output = Mustache.render($("#userInfoTable").html(),evtData.params);
+                console.log('list_output',list_output)
                 $('#userFrame').html(list_output);
                 $(".show_"+$("#userFrame").attr('lang')).css('color','red')
                 break;
@@ -242,8 +245,7 @@
         clearBoard()
     });
     $("#exitLogin").click(function () {
-        ws.send(JSON.stringify({'type':'exitRoom'}))
-        ws.send(JSON.stringify({'type':'destroy'}))
+        ws.send(JSON.stringify({'type':'logout'}))
         ws.close()
         $.post('http://'+window.location.host+'/UserController/logout',
             {}
@@ -258,6 +260,9 @@
     });
     $("#endTurn").click(function () {
         ws.send(JSON.stringify({'type':'endTurn'}));
+    });
+    $("#reconnect").click(function () {
+        ws.send(JSON.stringify({'type':'reconnect'}));
     });
     //为卡牌绑定事件
     $("#cardFrame").on("click",".cardSelector a",function () {
