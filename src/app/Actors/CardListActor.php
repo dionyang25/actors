@@ -40,7 +40,7 @@ class CardListActor extends Actor{
         //爆牌判定
         if($game_info['card_num']>$this->config['users']['card']['limit']){
             $this->saveContext->getData()['list'] = array_slice($this->saveContext->getData()['list'],0,$this->config['users']['card']['limit']);
-            $game_info['card_num'] = 10;
+            $game_info['card_num'] = $this->config['users']['card']['limit'];
         }
         $this->saveContext->save();
         Actor::getRpc($this->saveContext->getData()['user_info']['player'])->changeGameInfo($game_info);
