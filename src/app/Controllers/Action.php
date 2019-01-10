@@ -208,6 +208,8 @@ class Action extends Controller
 
     public function onClose()
     {
+        //支持断线重连
+
         $this->exitRoom();
         $this->destroy();
     }

@@ -34,7 +34,7 @@ $config['users']['buff'] =[
 ];
 
 $config['users']['card'] =[
-    'limit' =>10
+    'limit' =>8
 ];
 
 $config['users']['level_up'] = [

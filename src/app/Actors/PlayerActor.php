@@ -49,13 +49,7 @@ class PlayerActor extends Actor{
     }
 
     public function changeGameInfo($game_info=[]){
-        var_dump('game_info_need_change');
-        var_export($game_info);
-        var_dump('game_info_origin');
-        var_export($this->saveContext->getData()['game_info']);
         $this->saveContext->getData()['game_info'] = array_merge($this->saveContext->getData()['game_info'],$game_info);
-        var_dump('game_info');
-        var_export($this->saveContext->getData()['game_info']);
         $this->saveContext->save();
         //发布信息变更
         return $this->saveContext->getData()['game_info'];
@@ -122,5 +116,16 @@ class PlayerActor extends Actor{
             return $game_info['buff'][$buff_type][1];
         }
         return false;
+    }
+
+    /**
+     * 断线重连
+     */
+    public function backToGame(){
+        //查询用户信息
+
+        //发布玩家信息
+
+        //发布卡牌信息
     }
 }
