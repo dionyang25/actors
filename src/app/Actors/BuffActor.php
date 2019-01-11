@@ -46,6 +46,10 @@ class BuffActor extends Actor{
                         $this->extend($effect,$origin_uid,$uid);
                         $msg .= sprintf('%s 的光环 %s 被延长%s回合!',$uid,$buff_name,$effect['value']);
                         break;
+                    case 'copy':
+                        $this->copy($effect,$origin_uid,$uid);
+                        $msg .= sprintf('%s 获得 %s 的光环 %s !',$origin_uid,$uid,$buff_name);
+                        break;
                 }
 
             }else{
@@ -135,6 +139,23 @@ class BuffActor extends Actor{
         if(isset($game_info['buff'][$effect['selection']][0])){
             $game_info['buff'][$effect['selection']][0] += (int)$effect['value'];
             Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 复制buff
+     */
+    public function copy($effect,$origin_uid,$uid){
+        $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
+        if(empty($effect['selection'])){
+            return false;
+        }
+        if(isset($game_info['buff'][$effect['selection']])){
+            $game_info_self = Actor::getRpc('Player-'.$origin_uid)->gameInfo();
+            $game_info_self['buff'][$effect['selection']] = $game_info['buff'][$effect['selection']];
+            Actor::getRpc('Player-'.$origin_uid)->changeGameInfo($game_info_self);
             return true;
         }
         return false;

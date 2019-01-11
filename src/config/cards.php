@@ -632,23 +632,61 @@ $config['cards'] = [
 //        'is_object'=>1,
 //        'selector'=>2
 //    ]
-    30=>[
-        'name'=>'混沌火种',
-        'desc'=>'延长一个光环2回合（资源：2/0/0）',
+//    30=>[
+//        'name'=>'神圣火种',
+//        'desc'=>'延长一个光环2回合（资源：2/0/0）',
+//        'pic'=>'https://p1.hoopchina.com.cn/gdc/kog/champion/pic/70e96310b2efdfda50ba6c201fa9eb9b.png',
+//        'property'=>[
+//            1=>2
+//        ],
+//        'effect'=>[
+//            [
+//                'type'=>'buff',
+//                'method'=>'extend',
+//                'selector'=>2,
+//                'value'=>2
+//            ]
+//        ],
+//        'is_object'=>1,
+//        'selector'=>2
+//    ]
+    31=>[
+        'name'=>'神圣召唤',
+        'desc'=>'为自身复制一个对手的光环，如已有重复，则覆盖（资源：0/0/2）',
         'pic'=>'https://p1.hoopchina.com.cn/gdc/kog/champion/pic/70e96310b2efdfda50ba6c201fa9eb9b.png',
         'property'=>[
-            1=>2
+            3=>2
         ],
         'effect'=>[
             [
                 'type'=>'buff',
-                'method'=>'extend',
+                'method'=>'copy',
                 'selector'=>2,
-                'value'=>2
+                'object'=>12,
+                'value'=>1
             ]
         ],
-        'is_object'=>1,
+        'is_object'=>0,
         'selector'=>2
     ]
+//    32=>[
+//        'name'=>'等级提升-银',
+//        'desc'=>'选择己方一张带-Lv的手牌，等级提升至最高级。升级成功后，抽一张卡（资源：0/0/2，风）',
+//        'pic'=>'https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1528272881&di=bb0f73ae3d6ba21b0a1cd808c23edbb4&src=http://images.17173.com/2012/news/2012/06/28/gxy0628cm02s.jpg',
+//        'property'=>[
+//            3=>2
+//        ],
+//        'effect'=>[
+//            [
+//                'type'=>'level',
+//                'method'=>'up',
+//                'card'=>'all',
+//                'object'=>13,//表示自己
+//                'value'=>1
+//            ]
+//        ],
+//        'is_object'=>0,
+//        'selector'=>1
+//    ],
 ];
 return $config;
