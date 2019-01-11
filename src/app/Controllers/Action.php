@@ -52,11 +52,24 @@ class Action extends Controller
      * 创建房间
      */
     public function createRoom($room = ''){
+
+
         if(empty($room)){
             $this->send(['type' => '103', 'msg' => '房间名不能为空']);
             return ;
         }
-        $res = Actor::getRpc('roomList')->createRoom(1,$this->uid,$room);
+        try{
+            //判断一下是否已在房间 如在房间则退房
+            $has_room = Actor::getRpc('roomList')->hasRoom($this->uid);
+            if($has_room){
+                $this->exitRoom();
+            }
+            $res = Actor::getRpc('roomList')->createRoom(1,$this->uid,$room);
+        }catch (\Exception $e){
+            $this->send(['type' => '103', 'msg' => $e->getMessage()]);
+            return;
+        }
+
         if(!$res){
             $this->send(['type' => '103', 'msg' => '创建失败']);
             return ;
@@ -224,15 +237,16 @@ class Action extends Controller
             get_instance()->addSub('Player/Player-'.$this->uid,$this->uid);
             //发布房间信息
             Actor::getRpc($RoomActorName)->pubGameInfo();
-            //发布回合信息
-            Actor::getRpc($RoomActorName)->pubTurnInfo();
             try{
                 $card_list_name = 'cardList-'.$this->uid;
                 //发布卡牌信息
                 Actor::getRpc($card_list_name)->pubCardInfo();
+                //发布回合信息
+                Actor::getRpc($RoomActorName)->pubTurnInfo();
             }catch (\Exception $e){
                 echo $e->getMessage();
             }
+
         }catch (\Exception $e){
 
         }

@@ -34,7 +34,7 @@ class RoomListActor extends Actor{
         try{
             Actor::create(RoomActor::class,$RoomActorName);
         }catch (\Exception $e){
-            echo $e->getMessage();
+            echo 'wrong:'.$e->getMessage();
             return false;
         }
         $room_info['id'] = $RoomActorName;
@@ -127,7 +127,7 @@ class RoomListActor extends Actor{
      */
     public function subUserToRoom($RoomActorName,$user_id){
         try{
-           if(Actor::getRpc($RoomActorName)->joinRoomReply(['id'=>$user_id])){
+           if(Actor::getRpc($RoomActorName)->joinRoomReply(['uid'=>$user_id])){
                //房间列表统计人数+1
                $this->addRoomUserInfo($RoomActorName,$user_id);
            }

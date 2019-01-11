@@ -27,7 +27,7 @@ class RoomActor extends Actor{
      * @throws
      */
     public function joinRoomReply($user_info){
-        $user_id = $user_info['id'];
+        $user_id = $user_info['uid'];
         if(empty($this->saveContext->getData()['user_list'])){
             $this->saveContext->getData()['user_list'] = [];
             $this->saveContext->save();
@@ -37,22 +37,24 @@ class RoomActor extends Actor{
             if(count($join_users)>=self::ROOM_USERS){
                 return false;
             }
-            $current_user_actor = 'Player'.$user_id;
+            $current_user_actor = 'Player-'.$user_id;
             try{
                 Actor::create(PlayerActor::class,$current_user_actor);
+            }catch (\Exception $e){
+                var_dump('Actor::create(PlayerActor::class',$e->getMessage());
+            }
+            try{
                 Actor::getRpc($current_user_actor)->initData($user_info);
             }catch (\Exception $e){
-
+                var_dump('Actor::getRpc($current_user_actor)',$e->getMessage());
             }
 
-        }else{
-            //重进房间逻辑
         }
         //添加用户
         $this->saveContext->getData()['user_list'][$user_id] = 1;
         $this->saveContext->save();
         //订阅房间消息
-        get_instance()->addSub('Player/'.$this->name,$user_id);
+        get_instance()->addSub('Room/'.$this->name,$user_id);
         $data = [
             'type'=>'1002',
             'msg'=>'系统消息：欢迎'.$user_id.'进入房间'
