@@ -29,7 +29,7 @@ class BuffActor extends Actor{
         $msg = '';
         $buff_msg = $this->config->get('users.buff');
         foreach ($object as $uid){
-            var_dump('$effect[\'method\']',$effect['method']);
+//            var_dump('$effect[\'method\']',$effect['method']);
             if(!empty($effect['method'])){
                 switch ($effect['method']) {
                     case 'clean':

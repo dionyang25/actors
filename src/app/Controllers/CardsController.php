@@ -72,7 +72,7 @@ class CardsController extends BaseController
             unset($vo['property_1'],$vo['property_2'],$vo['property_3'],
                 $vo['description']);
             $all[$vo['id']] = $vo;
-            if((int)$vo['card_status'] == 2){
+            if((int)$vo['card_status'] == 1){
                 $avail[$vo['id']] = $vo;
             }
         }
