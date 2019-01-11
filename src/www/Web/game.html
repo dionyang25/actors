@@ -302,7 +302,7 @@
         let card_data = {
             'type':'drawCard',
             'params':[
-                $(this).attr("card_order"),0,selector
+                $(this).attr("card_order"),$(this).attr("operation"),selector
             ]
         }
         console.log('selector_data',card_data,selector)
@@ -382,7 +382,9 @@
 <script id="selectorList" type="text/html">
     <h5>{{msg}}</h5>
     {{#data}}
-        <div class="forSelector">{{name}} <a href="javascript:;" class="btn btn-info" card_order="{{card_order}}" selector="{{id}}">选择</a></div>
+        <div class="forSelector">{{name}} <a href="javascript:;" class="btn btn-info"
+                                             card_order="{{card_order}}" selector="{{id}}"
+                                             operation="{{operation}}">选择</a></div>
     {{/data}}
 </script>
 </body>

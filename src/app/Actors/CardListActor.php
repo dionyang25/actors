@@ -94,7 +94,7 @@ class CardListActor extends Actor{
      * @param $card_order
      * @param null $object
      * @return array
-     * @throws \Server\Asyn\MQTT\Exception
+     * @throws
      */
     public function draw($card_order,$object = null,$selection = null){
         //获取卡组信息
@@ -138,10 +138,12 @@ class CardListActor extends Actor{
                         continue;
                     }
                     //卡牌内部指向判断（处理以内部指向优先）
+                    //获取operation code
+                    $operation = $object;
                     $object = (isset($vo['object']))?$this->genObject($vo['object']):$object;
                     $selector_data = Actor::getRpc('Selector')->gen($card_desc['selector'],$selection,$object);
 //                    var_dump('$selector_data',$selector_data);
-                    $this->pubSelectorInfo($selector_data,$card_desc['selector'],$card_order);
+                    $this->pubSelectorInfo($selector_data,$card_desc['selector'],$card_order,$operation);
                 }
                 return ['res'=>false,'msg'=>''];
             }else{
@@ -204,7 +206,7 @@ class CardListActor extends Actor{
      * @param $card_order
      * @param $operation
      * @return array
-     * @throws \Server\Asyn\MQTT\Exception
+     * @throws
      */
     public function cover($card_order,$operation){
 
@@ -292,7 +294,7 @@ class CardListActor extends Actor{
 
     /**
      * 发布卡牌信息
-     * @throws \Server\Asyn\MQTT\Exception
+     * @throws
      */
     public function pubCardInfo(){
         $card_list = $this->fetchList();
@@ -306,16 +308,17 @@ class CardListActor extends Actor{
 
     /**
      * 发布选择器信息
-     * @throws \Server\Asyn\MQTT\Exception
+     * @throws
      */
-    public function pubSelectorInfo($data,$selector,$card_order){
+    public function pubSelectorInfo($data,$selector,$card_order,$operation){
         $words = [1=>'手牌',2=>'光环'];
         $res = [
             'type'=>'2003',
             'msg'=>'选择器信息',
             'params'=>['data'=>$data,'selector'=>$selector,
                 'msg'=>'请选择'.$words[$selector],
-                'card_order'=>$card_order
+                'card_order'=>$card_order,
+                'operation'=>$operation
             ]
         ];
         get_instance()->pub('Player/'.$this->saveContext->getData()['user_info']['player'],$res);

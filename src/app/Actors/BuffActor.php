@@ -27,14 +27,24 @@ class BuffActor extends Actor{
             return false;
         }
         $msg = '';
+        $buff_name = '';
         $buff_msg = $this->config->get('users.buff');
+        if(isset($effect['selection'])){
+            $buff_name = $buff_msg[$effect['selection']];
+        }else if(isset($effect['section'])){
+            $buff_name = $buff_msg[$effect['section']];
+        }
         foreach ($object as $uid){
-//            var_dump('$effect[\'method\']',$effect['method']);
             if(!empty($effect['method'])){
+
                 switch ($effect['method']) {
                     case 'clean':
                         $this->clean($effect,$origin_uid,$uid);
-                        $msg .= sprintf('%s 受到净化!',$uid);
+                        $msg .= sprintf('%s 的光环 %s 受到净化!',$uid,$buff_name);
+                        break;
+                    case 'extend':
+                        $this->extend($effect,$origin_uid,$uid);
+                        $msg .= sprintf('%s 的光环 %s 被延长%s回合!',$uid,$buff_name,$effect['value']);
                         break;
                 }
 
@@ -54,7 +64,7 @@ class BuffActor extends Actor{
                 }
                 $game_info['buff'][$effect['section']] = [$effect['turns'],$effect['value'],$duration];
                 Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
-                $msg .= sprintf('%s 获得光环 %s ，持续 %s 回合',$uid,$buff_msg[$effect['section']],$effect['turns']);
+                $msg .= sprintf('%s 获得光环 %s ，持续 %s 回合',$uid,$buff_name,$effect['turns']);
             }
         }
 
@@ -103,14 +113,28 @@ class BuffActor extends Actor{
      */
     public function clean($effect,$origin_uid,$uid){
         $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
-        var_dump('before_clean',$game_info);
         if(empty($effect['selection'])){
             return false;
         }
         if(isset($game_info['buff'][$effect['selection']])){
             unset($game_info['buff'][$effect['selection']]);
             Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
-            var_dump('after_clean',$game_info);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 延长buff
+     */
+    public function extend($effect,$origin_uid,$uid){
+        $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
+        if(empty($effect['selection'])){
+            return false;
+        }
+        if(isset($game_info['buff'][$effect['selection']][0])){
+            $game_info['buff'][$effect['selection']][0] += (int)$effect['value'];
+            Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
             return true;
         }
         return false;

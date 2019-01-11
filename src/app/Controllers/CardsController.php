@@ -44,6 +44,7 @@ class CardsController extends BaseController
             }
 
         }
+        $this->output($cards);
         return true;
     }
 

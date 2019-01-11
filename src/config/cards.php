@@ -614,23 +614,40 @@ $config['cards'] = [
 //        ],
 //        'is_object'=>1
 //    ],
-    29=>[
-        'name'=>'神圣净化',
-        'desc'=>'净化己方的一个光环（资源：0/2/0）',
-        'pic'=>'http://p1.hoopchina.com.cn/gdc/kog/spell/pic/c985373e71bf1006908a34512c201d44.jpg',
+//    29=>[
+//        'name'=>'神圣净化',
+//        'desc'=>'净化一个光环（资源：0/3/0）',
+//        'pic'=>'http://p1.hoopchina.com.cn/gdc/kog/spell/pic/c985373e71bf1006908a34512c201d44.jpg',
+//        'property'=>[
+//            2=>3
+//        ],
+//        'effect'=>[
+//            [
+//                'type'=>'buff',
+//                'method'=>'clean',
+//                'selector'=>2,
+//                'value'=>1
+//            ]
+//        ],
+//        'is_object'=>1,
+//        'selector'=>2
+//    ]
+    30=>[
+        'name'=>'混沌火种',
+        'desc'=>'延长一个光环2回合（资源：2/0/0）',
+        'pic'=>'https://p1.hoopchina.com.cn/gdc/kog/champion/pic/70e96310b2efdfda50ba6c201fa9eb9b.png',
         'property'=>[
-            2=>2
+            1=>2
         ],
         'effect'=>[
             [
                 'type'=>'buff',
-                'method'=>'clean',
+                'method'=>'extend',
                 'selector'=>2,
-                'object'=>13,
-                'value'=>1
+                'value'=>2
             ]
         ],
-        'is_object'=>0,
+        'is_object'=>1,
         'selector'=>2
     ]
 ];

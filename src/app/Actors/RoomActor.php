@@ -133,7 +133,7 @@ class RoomActor extends Actor{
 
     /**
      * 初始化游戏
-     * @throws \Server\Asyn\MQTT\Exception
+     * @throws
      */
     public function initGame(){
         //设置下对手
@@ -319,7 +319,7 @@ class RoomActor extends Actor{
         foreach (array_keys($this->saveContext->getData()['user_list']) as $uid){
             $is_turn_player = ($turn_uid == $uid)?1:0;
             //发布信息
-            Actor::getRpc('Player-'.$uid)->pubMsg('2011','玩家'.$turn_uid.'回合开始！',
+            Actor::getRpc('Player-'.$uid)->pubMsg('2011','目前是玩家'.$turn_uid.'的回合',
                 ['turn'=>$this->saveContext->getData()['game_info']['turn'],'is_turn_player'=>$is_turn_player]);
         }
     }
