@@ -17,7 +17,7 @@ class BuffActor extends Actor{
      * @param $effect
      * @param $origin_uid
      * @param null $object
-     * @return bool
+     * @return
      */
     public function dealEffect($effect,$origin_uid,$object = null,$duration = null){
 
@@ -29,25 +29,36 @@ class BuffActor extends Actor{
         $msg = '';
         $buff_msg = $this->config->get('users.buff');
         foreach ($object as $uid){
+            var_dump('$effect[\'method\']',$effect['method']);
+            if(!empty($effect['method'])){
+                switch ($effect['method']) {
+                    case 'clean':
+                        $this->clean($effect,$origin_uid,$uid);
+                        $msg .= sprintf('%s 受到净化!',$uid);
+                        break;
+                }
 
+            }else{
+                //上buff 有相同的buff 叠加数值 不叠加回合 （持续性buff不叠加）
+                $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
+                if(isset($game_info['buff'][$effect['section']][1]) && is_int($game_info['buff'][$effect['section']][1])){
+                    //val = -1 debuff
 
-            //上buff 有相同的buff 叠加数值 不叠加回合 （持续性buff不叠加）
-            $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
-            if(isset($game_info['buff'][$effect['section']][1]) && is_int($game_info['buff'][$effect['section']][1])){
-                //val = -1 debuff
-
-                $effect['value'] += $game_info['buff'][$effect['section']][1];
+                    $effect['value'] += $game_info['buff'][$effect['section']][1];
+                }
+                if(isset($effect['duration'])){
+                    $duration = $effect['duration'];
+                }
+                if(isset($game_info['buff'][$effect['section']][0])){
+                    $effect['turns'] = $game_info['buff'][$effect['section']][0];
+                }
+                $game_info['buff'][$effect['section']] = [$effect['turns'],$effect['value'],$duration];
+                Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
+                $msg .= sprintf('%s 获得光环 %s ，持续 %s 回合',$uid,$buff_msg[$effect['section']],$effect['turns']);
             }
-            if(isset($effect['duration'])){
-                $duration = $effect['duration'];
-            }
-            if(isset($game_info['buff'][$effect['section']][0])){
-                $effect['turns'] = $game_info['buff'][$effect['section']][0];
-            }
-            $game_info['buff'][$effect['section']] = [$effect['turns'],$effect['value'],$duration];
-            Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
-            $msg .= sprintf('%s 获得光环 %s ，持续 %s 回合',$uid,$buff_msg[$effect['section']],$effect['turns']);
         }
+
+
         return ['msg'=>$msg];
     }
 
@@ -83,6 +94,24 @@ class BuffActor extends Actor{
             }
             Actor::getRpc('victory')->judge($uids);
             return ['msg'=>$msg];
+        }
+        return false;
+    }
+
+    /**
+     * 净化buff
+     */
+    public function clean($effect,$origin_uid,$uid){
+        $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
+        var_dump('before_clean',$game_info);
+        if(empty($effect['selection'])){
+            return false;
+        }
+        if(isset($game_info['buff'][$effect['selection']])){
+            unset($game_info['buff'][$effect['selection']]);
+            Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
+            var_dump('after_clean',$game_info);
+            return true;
         }
         return false;
     }

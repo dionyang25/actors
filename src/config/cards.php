@@ -4,7 +4,7 @@
  * User: yanghaonan
  * Date: 2018/5/22
  * Time: 14:52
- * 12-对手 13-自己
+ * object:12-对手 13-自己
  */
 $config['cards'] = [
 //    0=>[
@@ -568,55 +568,32 @@ $config['cards'] = [
 //        'is_object'=>0,
 //        'resource'=>3
 //    ],
-    27=>[
-        'name'=>'风之领域A',
-        'desc'=>'发动风神之力，己方抽4张牌，再随机弃2张牌（资源：0/0/2，风）',
-        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528370455450&di=5e1d716f902f33b033a15aad82128205&imgtype=0&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fbaike%2Fc0%253Dbaike60%252C5%252C5%252C60%252C20%253Bt%253Dgif%2Fsign%3D7c898109ccbf6c81e33a24badd57da50%2Ff603918fa0ec08fab13676c659ee3d6d55fbda99.jpg',
-        'property'=>[
-            3=>2
-        ],
-        'effect'=>[
-            [
-                'type'=>'opcard',
-                'method'=>'draw',
-                'object'=>13,//表示自己
-                'value'=>4
-            ],
-            [
-                'type'=>'opcard',
-                'method'=>'discard',
-                'object'=>13,//表示自己
-                'value'=>2
-            ]
-        ],
-        'is_object'=>0
-    ],
-    28=>[
-        'name'=>'风之领域A',
-        'desc'=>'造成10点火属性伤害，本回合之后造成的伤害+10（资源：3/0/0，火）',
-        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528370455450&di=5e1d716f902f33b033a15aad82128205&imgtype=0&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fbaike%2Fc0%253Dbaike60%252C5%252C5%252C60%252C20%253Bt%253Dgif%2Fsign%3D7c898109ccbf6c81e33a24badd57da50%2Ff603918fa0ec08fab13676c659ee3d6d55fbda99.jpg',
-        'property'=>[
-            3=>2
-        ],
-        'effect'=>[
-            [
-                'type'=>'opcard',
-                'method'=>'draw',
-                'object'=>13,//表示自己
-                'value'=>4
-            ],
-            [
-                'type'=>'opcard',
-                'method'=>'discard',
-                'object'=>13,//表示自己
-                'value'=>2
-            ]
-        ],
-        'is_object'=>1
-    ],
-//    29=>[
+//    27=>[
 //        'name'=>'风之领域A',
-//        'desc'=>'造成10点火属性伤害，本回合之后造成的伤害+10（资源：0/0/2，风）',
+//        'desc'=>'发动风神之力，己方抽4张牌，再随机弃2张牌（资源：0/0/2，风）',
+//        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528370455450&di=5e1d716f902f33b033a15aad82128205&imgtype=0&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fbaike%2Fc0%253Dbaike60%252C5%252C5%252C60%252C20%253Bt%253Dgif%2Fsign%3D7c898109ccbf6c81e33a24badd57da50%2Ff603918fa0ec08fab13676c659ee3d6d55fbda99.jpg',
+//        'property'=>[
+//            3=>2
+//        ],
+//        'effect'=>[
+//            [
+//                'type'=>'opcard',
+//                'method'=>'draw',
+//                'object'=>13,//表示自己
+//                'value'=>4
+//            ],
+//            [
+//                'type'=>'opcard',
+//                'method'=>'discard',
+//                'object'=>13,//表示自己
+//                'value'=>2
+//            ]
+//        ],
+//        'is_object'=>0
+//    ],
+//    28=>[
+//        'name'=>'风之领域A',
+//        'desc'=>'造成10点火属性伤害，本回合之后造成的伤害+10（资源：3/0/0，火）',
 //        'pic'=>'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528370455450&di=5e1d716f902f33b033a15aad82128205&imgtype=0&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fbaike%2Fc0%253Dbaike60%252C5%252C5%252C60%252C20%253Bt%253Dgif%2Fsign%3D7c898109ccbf6c81e33a24badd57da50%2Ff603918fa0ec08fab13676c659ee3d6d55fbda99.jpg',
 //        'property'=>[
 //            3=>2
@@ -637,5 +614,24 @@ $config['cards'] = [
 //        ],
 //        'is_object'=>1
 //    ],
+    29=>[
+        'name'=>'神圣净化',
+        'desc'=>'净化己方的一个光环（资源：0/2/0）',
+        'pic'=>'http://p1.hoopchina.com.cn/gdc/kog/spell/pic/c985373e71bf1006908a34512c201d44.jpg',
+        'property'=>[
+            2=>2
+        ],
+        'effect'=>[
+            [
+                'type'=>'buff',
+                'method'=>'clean',
+                'selector'=>2,
+                'object'=>13,
+                'value'=>1
+            ]
+        ],
+        'is_object'=>0,
+        'selector'=>2
+    ]
 ];
 return $config;

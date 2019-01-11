@@ -43,7 +43,12 @@
     <div class="col-md-5">
         <div class="row">
             <div class="col-md-12 bg-warning"><h4>卡牌区 <span id="cardPic"></span> </h4></div>
-            <div class="col-md-12 bg-warning"><div id="cardFrame" style="height:300px;overflow:auto;"></div></div>
+            <div class="col-md-12 bg-warning" id="selectorFrameParent" style="height:300px;overflow:auto;display:none;">
+                <button class="btn btn-danger">返回</button> <div id="selectorFrame" ></div>
+            </div>
+            <div class="col-md-12 bg-warning">
+                <div id="cardFrame" style="height:300px;overflow:auto;"></div>
+            </div>
         </div>
     </div>
     <div class="col-md-3">
@@ -159,7 +164,6 @@
             case '2001':
                 //游戏用户信息
                 list_output = Mustache.render($("#userInfoTable").html(),evtData.params);
-                console.log('list_output',list_output)
                 $('#userFrame').html(list_output);
                 $(".show_"+$("#userFrame").attr('lang')).css('color','red')
                 break;
@@ -169,6 +173,15 @@
                 let card_pic_output = Mustache.render($("#cardPicList").html(),evtData.params)
                 $('#cardFrame').html(list_output);
                 $('#cardPic').html(card_pic_output);
+                $('#selectorFrameParent').hide();
+                $('#cardFrame').show();
+                break;
+            case '2003':
+                //选择器信息
+                list_output = Mustache.render($("#selectorList").html(),evtData.params);
+                $('#selectorFrame').html(list_output);
+                $('#selectorFrameParent').show();
+                $('#cardFrame').hide();
                 break;
             case '2010':
                 //对战区信息
@@ -267,7 +280,7 @@
     //为卡牌绑定事件
     $("#cardFrame").on("click",".cardSelector a",function () {
 
-        console.log('operation',$(this).attr("operation"));
+        // console.log('operation',$(this).attr("operation"));
         let operation = parseInt($(this).attr("operation"));
         let action;
         if(operation >10){
@@ -281,8 +294,24 @@
                 $(this).attr("order"),operation//card_order,operation
            ]
         }
-        console.log(card_data)
         ws.send(JSON.stringify(card_data))
+    });
+
+    $("#selectorFrameParent").on("click",".forSelector a",function () {
+        let selector = $(this).attr("selector");
+        let card_data = {
+            'type':'drawCard',
+            'params':[
+                $(this).attr("card_order"),0,selector
+            ]
+        }
+        console.log('selector_data',card_data,selector)
+        ws.send(JSON.stringify(card_data))
+    });
+
+    $("#selectorFrameParent button").click(function () {
+        $('#selectorFrameParent').hide();
+        $('#cardFrame').show();
     });
 
     //请求规则
@@ -349,6 +378,12 @@
             </div>
         </td></tr>{{/card_info}}
     </table>
+</script>
+<script id="selectorList" type="text/html">
+    <h5>{{msg}}</h5>
+    {{#data}}
+        <div class="forSelector">{{name}} <a href="javascript:;" class="btn btn-info" card_order="{{card_order}}" selector="{{id}}">选择</a></div>
+    {{/data}}
 </script>
 </body>
 </html>

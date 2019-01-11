@@ -20,7 +20,8 @@ $config['users']['resource'] =[
     '火'=>1,
     '水'=>2,
     '风'=>3,
-    'default_increase'=>2
+    'default_increase'=>2,
+    'limit'=>10
 ];
 
 $config['users']['buff'] =[
@@ -33,6 +34,7 @@ $config['users']['buff'] =[
     'restrict_draw'=>'冻结',
 ];
 
+//手牌上限
 $config['users']['card'] =[
     'limit' =>8
 ];

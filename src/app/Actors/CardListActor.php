@@ -96,7 +96,7 @@ class CardListActor extends Actor{
      * @return array
      * @throws \Server\Asyn\MQTT\Exception
      */
-    public function draw($card_order,$object = null){
+    public function draw($card_order,$object = null,$selection = null){
         //获取卡组信息
         $deck = $this->saveContext->getData()['list'];
         if(!isset($deck[$card_order])){
@@ -124,6 +124,38 @@ class CardListActor extends Actor{
         $res = false;
         $word3 = '';
         $uids = [$this->saveContext->getData()['user_info']['uid'],$this->saveContext->getData()['user_info']['opponent']];
+        //选择器逻辑
+        if(!empty($card_desc['selector'])){
+            if(is_null($selection)){
+                try{
+                    Actor::create(SelectorActor::class,'Selector');
+                }catch (\Exception $e){
+                    echo 'selector:'.$e->getMessage();
+                }
+                //提前找到需要使用选择器的效果
+                foreach ($card_desc['effect'] as $vo){
+                    if(empty($vo['selector'])){
+                        continue;
+                    }
+                    //卡牌内部指向判断（处理以内部指向优先）
+                    $object = (isset($vo['object']))?$this->genObject($vo['object']):$object;
+                    $selector_data = Actor::getRpc('Selector')->gen($card_desc['selector'],$selection,$object);
+//                    var_dump('$selector_data',$selector_data);
+                    $this->pubSelectorInfo($selector_data,$card_desc['selector'],$card_order);
+                }
+                return ['res'=>false,'msg'=>''];
+            }else{
+                foreach ($card_desc['effect'] as &$vo){
+                    if(empty($vo['selector'])){
+                        continue;
+                    }
+                    $vo['selection'] = $selection;
+                }
+
+            }
+        }
+//        var_dump('$card_desc[\'effect\']',$card_desc['effect']);
+        //执行效果
         foreach ($card_desc['effect'] as $vo){
             try{
 //                Actor::create($actors[$vo['type']]['class'],$vo['type']);
@@ -201,7 +233,6 @@ class CardListActor extends Actor{
         }
 
         //增加至覆盖列表@TODO
-
         //从卡牌列表中移除
         unset($this->saveContext->getData()['list'][$card_order]);
         $this->saveContext->save();
@@ -271,6 +302,23 @@ class CardListActor extends Actor{
             'params'=>['card_info'=>$card_list]
         ];
         get_instance()->pub('Player/'.$this->saveContext->getData()['user_info']['player'],$data);
+    }
+
+    /**
+     * 发布选择器信息
+     * @throws \Server\Asyn\MQTT\Exception
+     */
+    public function pubSelectorInfo($data,$selector,$card_order){
+        $words = [1=>'手牌',2=>'光环'];
+        $res = [
+            'type'=>'2003',
+            'msg'=>'选择器信息',
+            'params'=>['data'=>$data,'selector'=>$selector,
+                'msg'=>'请选择'.$words[$selector],
+                'card_order'=>$card_order
+            ]
+        ];
+        get_instance()->pub('Player/'.$this->saveContext->getData()['user_info']['player'],$res);
     }
 
     /**

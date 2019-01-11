@@ -67,18 +67,19 @@ class CardsController extends BaseController
             $vo['property'][2] = $vo['property_2'];
             $vo['property'][3] = $vo['property_3'];
             $vo['is_object'] = (int)$vo['is_object'];
+            $vo['selector'] = (int)$vo['selector'];
             $vo['name'] = $property_main[$vo['property_main']].$vo['name'];
             unset($vo['property_1'],$vo['property_2'],$vo['property_3'],
                 $vo['description']);
             $all[$vo['id']] = $vo;
-            if((int)$vo['card_status'] == 1){
+            if((int)$vo['card_status'] == 2){
                 $avail[$vo['id']] = $vo;
             }
         }
         //导入到redis
         $this->redis_pool->getCoroutine()->set('cards_info',json_encode($all));
         $this->redis_pool->getCoroutine()->set('cards_avail',json_encode($avail));
-
+        $this->output($avail);
     }
 
     /**

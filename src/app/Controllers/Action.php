@@ -92,10 +92,10 @@ class Action extends Controller
             //进入指定房间
             if(!empty($room)){
                 $res = Actor::getRpc('roomList')->subUserToRoom($room,$this->uid);
-                if(!$res){
-                    $this->send(['type' => '103', 'msg' => '进入房间失败']);
-                    return ;
-                }
+//                if(!$res){
+//                    $this->send(['type' => '103', 'msg' => '进入房间失败']);
+//                    return ;
+//                }
                 $this->send(['type' => '1001', 'msg' => '进入房间！房间号-'.$room,'params'=>['room_no'=>$room]]);
                 return ;
             }
@@ -173,13 +173,15 @@ class Action extends Controller
     /**
      * 出牌
      * @param $card_order
-     * @paramk $operation object 11-不取对象 12-对手 13-自己
+     * @param $operation object 11-不取对象 12-对手 13-自己
+     *  @param $selection 选择器-选择
      */
-    public function drawCard($card_order,$operation = 0){
+    public function drawCard($card_order,$operation = 0,$selection = null){
+//        var_dump('drawCard$selection',$selection);
        //打出卡牌
         try{
             $card_list_name = 'cardList-'.$this->uid;
-            $result = Actor::getRpc($card_list_name)->draw($card_order,$operation);
+            $result = Actor::getRpc($card_list_name)->draw($card_order,$operation,$selection);
         }catch (\Exception $e){
             echo $e->getMessage();
         }
@@ -213,7 +215,6 @@ class Action extends Controller
             //回合结束
             Actor::getRpc($RoomActorName)->endTurn($this->uid,1);
 
-
         }catch (\Exception $e){
 
         }
@@ -226,7 +227,6 @@ class Action extends Controller
         try{
             //找roomActor
             $RoomActorName = Actor::getRpc('roomList')->hasRoom($this->uid);
-            var_dump('$RoomActorName',$RoomActorName);
             if (!$RoomActorName) {
                 $this->send(['type' => '104', 'msg' => '您不在房间内']);
                 return;
