@@ -53,7 +53,7 @@ class BuffActor extends Actor{
                 }
 
             }else{
-                //上buff 有相同的buff 叠加数值 不叠加回合 （持续性buff不叠加）
+                //上buff 有相同的buff 叠加数值 不叠加回合
                 $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
                 if(isset($game_info['buff'][$effect['section']][1]) && is_int($game_info['buff'][$effect['section']][1])){
                     //val = -1 debuff

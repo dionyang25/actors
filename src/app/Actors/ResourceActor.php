@@ -33,17 +33,19 @@ class ResourceActor extends Actor
             //获取用户hp
             $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
             //处理覆盖
-            switch ($effect['method']){
-                case 'cover':
-                    if(isset($effect['card_num'])){
-                        $game_info['card_num'] = $effect['card_num'] - 1;
-                        if($game_info['card_num'] < 0){
-                            $game_info['card_num'] = 0;
+            if(!empty($effect['method'])){
+                switch ($effect['method']){
+                    case 'cover':
+                        if(isset($effect['card_num'])){
+                            $game_info['card_num'] = $effect['card_num'] - 1;
+                            if($game_info['card_num'] < 0){
+                                $game_info['card_num'] = 0;
+                            }
                         }
-                    }
-                    //增加buff
-                    $game_info['buff']['is_cover'] = [1,''];
-                    break;
+                        //增加buff
+                        $game_info['buff']['is_cover'] = [1,''];
+                        break;
+                }
             }
             foreach ($effect['value'] as $key =>$val ){
                 $val = $val + $buff_value;
