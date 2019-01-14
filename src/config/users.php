@@ -21,16 +21,18 @@ $config['users']['resource'] =[
     '水'=>2,
     '风'=>3,
     'default_increase'=>2,
-    'limit'=>10
+//    'limit'=>10
 ];
 
 $config['users']['buff'] =[
     'dmg' =>'伤害',
+    'vulnerability'=>'寒伤',
     'is_cover'=>'覆盖',
-    'cover'=>'资源加速',
+    'cover'=>'加速',
     'duration_dmg'=>'持续伤害',
     'duration_recover'=>'持续回复',
     'duration_draw_card'=>'持续抽牌',
+    'duration_vulnerability'=>'持续寒伤',
     'restrict_draw'=>'冻结',
 ];
 

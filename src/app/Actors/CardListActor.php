@@ -203,17 +203,17 @@ class CardListActor extends Actor{
 
     /**
      * 覆盖卡牌
-     * @param $card_order
-     * @param $operation
+     * @param $card_order string 卡的order
+     * @param $resource_order string 这里指的是资源的序号 1-火 2-水 3-风
      * @return array
      * @throws
      */
-    public function cover($card_order,$operation){
-
-        $game_info = Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->gameInfo();
+    public function cover($card_order,$resource_order){
+        $uid = $this->saveContext->getData()['user_info']['uid'];
+        $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
         //检查buff 已覆盖过则提示已覆盖了
         if(!empty($game_info['buff']['is_cover'])){
-            Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->pubMsg('2010','每回合只能覆盖一张卡');
+            Actor::getRpc('Player-'.$uid)->pubMsg('2010','每回合只能覆盖一张卡');
             return false;
         }
         //获取卡组信息
@@ -224,27 +224,40 @@ class CardListActor extends Actor{
         //获取该卡属性
         $card_list = $this->loader->model(CardsModel::class,$this)->loadCards();
         $card_desc = $card_list[$deck[$card_order]];
-        //增加对应资源
+        //增加对应资源（搬迁到资源actor去执行)
         $resource_config = $this->config->get('users.resource');
         $increase = isset($card_desc['resource'])?$card_desc['resource']:$resource_config['default_increase'];
-        $game_info['resource'][$operation] += $increase;
-        //检查资源增益buff
-        if(!empty($game_info['buff']['cover'])){
-            $game_info['resource'][$operation] += $game_info['buff']['cover'][1];
-            if($game_info['resource'][$operation]<0){$game_info['resource'][$operation]=0;}
+        //制造光环
+        $effect = [
+            'type'=>'resource',
+            'method'=>'cover',
+            'card_num'=>count($this->saveContext->getData()['list']),
+            'object'=>$uid,
+            'value'=>[
+                $resource_order => $increase
+            ]
+        ];
+        //执行资源增加效果
+        try{
+//                Actor::create($actors[$vo['type']]['class'],$vo['type']);
+            Actor::create('app\\Actors\\'.ucfirst($effect['type'].'Actor'),$effect['type']);
+        }catch (\Exception $e){
+            echo $e->getMessage();
         }
-
+        //处理效果
+        $res = Actor::getRpc($effect['type'])->dealEffect($effect,$this->saveContext->getData()['user_info']['uid'],$effect['object']);
+        if(!$res){
+            Actor::getRpc('Player-'.$uid)->pubMsg('2010','覆盖处理失败');
+            return false;
+        }
         //增加至覆盖列表@TODO
+
         //从卡牌列表中移除
         unset($this->saveContext->getData()['list'][$card_order]);
         $this->saveContext->save();
-        //计算列表 更新卡牌数
-        $game_info['card_num'] = count($this->saveContext->getData()['list']);
-        //增加buff
-        $game_info['buff']['is_cover'] = [1,''];
-        Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->changeGameInfo($game_info);
+
         //发布资源消息
-        $modal = '玩家'.$this->saveContext->getData()['user_info']['uid'].'覆盖一张卡,'.$resource_config[$operation].'属性资源+'.$increase;
+        $modal = '玩家'.$uid.'覆盖一张卡。'.$res['msg'];
         Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubMsg('2010',$modal);
         //房间-发布用户信息
         Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubGameInfo();
