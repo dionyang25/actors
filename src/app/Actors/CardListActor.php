@@ -147,18 +147,20 @@ class CardListActor extends Actor{
                 }
                 return ['res'=>false,'msg'=>''];
             }else{
-                foreach ($card_desc['effect'] as &$vo){
-                    if(empty($vo['selector'])){
-                        continue;
+                $temp = [];
+                foreach ($card_desc['effect'] as $vo){
+                    if(!empty($vo['selector'])){
+                        $vo['selection'] = $selection;
                     }
-                    $vo['selection'] = $selection;
+                    $temp[] = $vo;
                 }
-
+                $card_desc['effect'] = $temp;
             }
         }
-//        var_dump('$card_desc[\'effect\']',$card_desc['effect']);
+//        var_dump('$c_origin',$card_desc['effect']);
         //执行效果
         foreach ($card_desc['effect'] as $vo){
+//            var_dump('$card_desc[\'effect\']',$card_desc['effect']);
             try{
 //                Actor::create($actors[$vo['type']]['class'],$vo['type']);
                 Actor::create('app\\Actors\\'.ucfirst($vo['type'].'Actor'),$vo['type']);
@@ -289,13 +291,16 @@ class CardListActor extends Actor{
      * @throws
      */
     public function upgrade($card_order = null){
-        if(!is_null($card_order)){
-
-        }
         //获取升级配置
         $level_up = $this->config->get('users.level_up');
         //升级！
-        foreach ($this->saveContext->getData()['list'] as &$vo){
+        foreach ($this->saveContext->getData()['list'] as $key => &$vo){
+            if(!is_null($card_order)){
+                //只升级单卡
+                if($card_order!=$key){
+                    continue;
+                }
+            }
             if(array_key_exists($vo,$level_up)){
                 $vo = $level_up[$vo];
             }

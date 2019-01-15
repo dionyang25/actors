@@ -26,12 +26,13 @@ class ResourceActor extends Actor
         $config_resource = $this->config->get('users.resource');
         //检查资源增益buff
         $buff_value = 0;
-        if(!empty($game_info['buff']['cover'])){
-            $buff_value += $game_info['buff']['cover'][1];
-        }
+
         foreach ($object as $uid){
             //获取用户hp
             $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
+            if(!empty($game_info['buff']['cover'][1])){
+                $buff_value += $game_info['buff']['cover'][1];
+            }
             //处理覆盖
             if(!empty($effect['method'])){
                 switch ($effect['method']){

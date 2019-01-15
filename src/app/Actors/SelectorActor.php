@@ -27,6 +27,17 @@ class SelectorActor extends Actor
         if(is_null($selection)){
             //生成选择器
             switch ($selector){
+                //手牌
+                case 1:
+                    foreach ($object as $uid) {
+                        $card_list = Actor::getRpc('cardList-' . $uid)->fetchList();
+                        if(!empty($card_list)){
+                            foreach ($card_list as $val){
+                                $res[] = ['id'=>$val['card_order'],'name'=>$val['card_desc']['name']];
+                            }
+                        }
+                    }
+                    break;
                 //光环
                 case 2:
                     $buff_msg = $this->config->get('users.buff');

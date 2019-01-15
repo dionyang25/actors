@@ -55,6 +55,7 @@ class BuffActor extends Actor{
             }else{
                 //上buff 有相同的buff 叠加数值 不叠加回合
                 $game_info = Actor::getRpc('Player-'.$uid)->gameInfo();
+
                 if(isset($game_info['buff'][$effect['section']][1]) && is_int($game_info['buff'][$effect['section']][1])){
                     //val = -1 debuff
 
@@ -62,6 +63,12 @@ class BuffActor extends Actor{
                 }
                 if(isset($effect['duration'])){
                     $duration = $effect['duration'];
+                    //循环查找并叠加duration的数值（伤害等)
+                    if(isset($game_info['buff'][$effect['section']][2][0])){
+                       if($duration[0]['type'] == $game_info['buff'][$effect['section']][2][0]['type']){
+                           $duration[0]['value'] += $game_info['buff'][$effect['section']][2][0]['value'];
+                       }
+                    }
                 }
                 if(isset($game_info['buff'][$effect['section']][0])){
                     $effect['turns'] = $game_info['buff'][$effect['section']][0];

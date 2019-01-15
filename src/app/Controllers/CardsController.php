@@ -53,6 +53,10 @@ class CardsController extends BaseController
      * @throws
      */
     public function http_export(){
+        $card_status = $this->http_input->get('card_status');
+        if(empty($card_status)){
+            $card_status = 1;
+        }
         //取全卡list
         $list = $this->mysql_pool->dbQueryBuilder->select('*')->from($this->table)->query();
         $list = $list['result'];
@@ -73,7 +77,7 @@ class CardsController extends BaseController
             unset($vo['property_1'],$vo['property_2'],$vo['property_3'],
                 $vo['description']);
             $all[$vo['id']] = $vo;
-            if((int)$vo['card_status'] == 1){
+            if((int)$vo['card_status'] == $card_status){
                 $avail[$vo['id']] = $vo;
             }
         }
