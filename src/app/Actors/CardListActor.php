@@ -141,7 +141,7 @@ class CardListActor extends Actor{
                     //获取operation code
                     $operation = $object;
                     $object = (isset($vo['object']))?$this->genObject($vo['object']):$object;
-                    $selector_data = Actor::getRpc('Selector')->gen($card_desc['selector'],$selection,$object);
+                    $selector_data = Actor::getRpc('Selector')->gen($vo,$object);
 //                    var_dump('$selector_data',$selector_data);
                     $this->pubSelectorInfo($selector_data,$card_desc['selector'],$card_order,$operation);
                 }
@@ -182,7 +182,7 @@ class CardListActor extends Actor{
             Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->changeGameInfo($game_info);
             //扣除资源
             Actor::getRpc('Player-'.$this->saveContext->getData()['user_info']['uid'])->checkCardResource($card_desc,1);
-            $modal = '玩家 %s 打出 %s ,%s';
+            $modal = '<span style="color:#993300">玩家 %s 打出 %s ,%s</span>';
             $modal = sprintf($modal,$this->saveContext->getData()['user_info']['uid'],$card_desc['name'],$word3);
             //发布卡牌效果消息
             Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubMsg('2010',$modal);
@@ -259,7 +259,7 @@ class CardListActor extends Actor{
         $this->saveContext->save();
 
         //发布资源消息
-        $modal = '玩家'.$uid.'覆盖一张卡。'.$res['msg'];
+        $modal = '<span style="color:#000099">玩家'.$uid.'覆盖一张卡。'.$res['msg'].'</span>';
         Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubMsg('2010',$modal);
         //房间-发布用户信息
         Actor::getRpc($this->saveContext->getData()['user_info']['room'])->pubGameInfo();

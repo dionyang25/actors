@@ -67,7 +67,11 @@ class CardsController extends BaseController
         $property_main = [1=>'🔥',2=>'💧',3=>'☁️'];
         foreach ($list as $vo){
             $vo['effect'] = json_decode($vo['effect']);
-            $vo['desc'] = $vo['description'];
+            $vo['desc'] = $vo['description'].
+                "(打出:{$property_main[1]}{$vo['property_1']}
+                {$property_main[2]}{$vo['property_2']}
+                {$property_main[3]}{$vo['property_3']}
+                )";
             $vo['property'][1] = $vo['property_1'];
             $vo['property'][2] = $vo['property_2'];
             $vo['property'][3] = $vo['property_3'];
