@@ -10,6 +10,7 @@ namespace app\Actors;
 
 
 use Server\CoreBase\Actor;
+use app\Models\CardsModel;
 
 class SelectorActor extends Actor
 {
@@ -67,8 +68,16 @@ class SelectorActor extends Actor
                         }
                     }
                     break;
+                //指定卡牌
+                case 3:
+                    $card_avail_list = $this->loader->model(CardsModel::class,$this)->loadCards();
+                    foreach ($effect['selector_range'] as $vo){
+                        $res[] = ['id'=>$card_avail_list[$vo]['id'],'name'=> $card_avail_list[$vo]['name'],
+                        'desc'=>$card_avail_list[$vo]['desc']];
+                    }
+                    break;
             }
-
+            var_dump('reds',$res);
 //        }
         return $res;
     }

@@ -24,7 +24,7 @@ class CardListActor extends Actor{
      * @param int $random
      * @throws \Server\Asyn\MQTT\Exception
      */
-    public function addNewCard($num = 1,$random = 1,$is_pub_user_info = 1,$is_pub_card_info = 1){
+    public function addNewCard($num = 1,$random = 1,$is_pub_user_info = 1,$is_pub_card_info = 1,$card_id = 0){
         $card_list = $this->loader->model(CardsModel::class,$this)->loadCards(1);
         //随机取卡
         if($random){
@@ -32,7 +32,8 @@ class CardListActor extends Actor{
                 $key = array_rand($card_list);
                 $this->saveContext->getData()['list'][] = $key;
             }
-
+        }else{
+            $this->saveContext->getData()['list'][] = $card_id;
         }
         //更新玩家的卡片数量显示
         $game_info = Actor::getRpc($this->saveContext->getData()['user_info']['player'])->gameInfo();
@@ -329,7 +330,7 @@ class CardListActor extends Actor{
      * @throws
      */
     public function pubSelectorInfo($data,$selector,$card_order,$operation){
-        $words = [1=>'手牌',2=>'光环'];
+        $words = [1=>'手牌',2=>'光环',3=>'卡牌'];
         $res = [
             'type'=>'2003',
             'msg'=>'选择器信息',

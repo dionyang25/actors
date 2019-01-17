@@ -23,8 +23,17 @@ class OpcardActor extends Actor{
         switch ($effect['method']){
             //抽牌
             case 'draw':
-                Actor::getRpc('cardList-'.$object)->addNewCard($effect['value'],1,0,0);
-                $msg .= sprintf('%s 借助风神之力，抽 %s 张牌！',$object,$effect['value']);
+                if(!empty($effect['selection'])){
+                    $random = 0;
+                    $card_id = $effect['selection'];
+                    $msg .= sprintf('%s 通过抉择得到 %s 张牌！',$object,$effect['value']);
+                }else{
+                    $random = 1;
+                    $card_id = 0;
+                    $msg .= sprintf('%s 借助风神之力，抽 %s 张牌！',$object,$effect['value']);
+                }
+                Actor::getRpc('cardList-'.$object)->addNewCard($effect['value'],$random,0,1,$card_id);
+
                 return ['msg'=>$msg];
 
                 break;

@@ -37,7 +37,7 @@
             <div class="col-md-12 col-xs-6 col-sm-6 bg-info">
                 <div id="userFrame" lang=""></div>
             </div>
-            <div class="col-md-12 col-xs-6 col-sm-6 bg-danger"><h4>消息（回合：<span id="turn"></span>）</h4><div id="battleFrame" style="height:150px; overflow:auto"></div></div>
+            <div class="col-md-12 col-xs-6 col-sm-6 bg-danger"><h4>消息（⌚️：<span id="turn"></span>）</h4><div id="battleFrame" style="height:150px; overflow:auto"></div></div>
         </div>
     </div>
     <div class="col-md-5">
@@ -335,7 +335,7 @@
     <div class="show_{{uid}}" style="margin-left: 10px">
         <div><span id="is_turn_player"></span><span class="show_{{uid}}">{{uid}}</span></div>
             hp:<progress value="{{info.hp}}" max="150"></progress> {{info.hp}}/150
-            <div>🔥{{info.resource.1}} 💧{{info.resource.2}} ☁️{{info.resource.3}} ⌚️{{info.card_num}}</div>
+            <div>🔥{{info.resource.1}} 💧{{info.resource.2}} ☁️{{info.resource.3}} 🎴{{info.card_num}}</div>
             <div>👼 {{#info.buff}}{{name}}{{value}}({{turns}}){{/info.buff}}</div>
     </div>
     {{/game_info}}
@@ -382,7 +382,7 @@
 <script id="selectorList" type="text/html">
     <h5>{{msg}}</h5>
     {{#data}}
-        <div class="forSelector">{{name}} <a href="javascript:;" class="btn btn-info"
+        <div class="forSelector">{{name}}（{{desc}}） <a href="javascript:;" class="btn btn-info"
                                              card_order="{{card_order}}" selector="{{id}}"
                                              operation="{{operation}}">选择</a></div>
     {{/data}}
