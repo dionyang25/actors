@@ -62,5 +62,7 @@ $config['users']['level_up'] = [
     73=>74,
     85=>86,
     86=>87,
+    93=>94,
+    94=>95,
 ];
 return $config;
