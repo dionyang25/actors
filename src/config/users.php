@@ -9,7 +9,7 @@ $config['users']['game_initial'] = [
     'hp'=>150,
     'card_num'=>0,
     'resource'=>[
-        1=>2,2=>2,3=>2
+        1=>1,2=>1,3=>1
     ]
 ];
 
@@ -57,6 +57,8 @@ $config['users']['level_up'] = [
     65=>66,
     66=>67,
     72=>73,
-    73=>74
+    73=>74,
+    85=>86,
+    86=>87,
 ];
 return $config;
