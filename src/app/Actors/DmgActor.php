@@ -33,9 +33,16 @@ class DmgActor extends Actor{
             if(!empty($game_info['buff']['vulnerability'])){
                 $dmg_value += $game_info['buff']['vulnerability'][1];
             }
-            $game_info['hp'] -= ($effect['value']+$dmg_value);
+            //查看目标减伤buff
+            if(!empty($game_info['buff']['reducer'])){
+                $dmg_value -= $game_info['buff']['reducer'][1];
+            }
+            //最终伤害
+            $final_dmg = $effect['value']+$dmg_value;
+            if($final_dmg<0){$final_dmg = 0;}
+            $game_info['hp'] -= $final_dmg;
             Actor::getRpc('Player-'.$uid)->changeGameInfo($game_info);
-            $msg .= sprintf('对 %s 造成 %s 点伤害！',$uid,$effect['value']+$dmg_value);
+            $msg .= sprintf('对 %s 造成 %s 点伤害！',$uid,$final_dmg);
         }
         //组织msg
         return ['msg'=>$msg];

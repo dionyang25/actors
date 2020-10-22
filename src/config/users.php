@@ -33,7 +33,9 @@ $config['users']['buff'] =[
     'duration_recover'=>'持续回复',
     'duration_draw_card'=>'持续抽牌',
     'duration_vulnerability'=>'持续寒伤',
+    'duration_reducer'=>'持续减伤',
     'restrict_draw'=>'冻结',
+    'reducer'=>'减伤',
 ];
 
 //手牌上限
